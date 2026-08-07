@@ -1,0 +1,3 @@
+flex -o mi_codigo.c etfind.l
+gcc mi_codigo.c -o ejecutable
+flex -o mi_codigo.c etfind.l && gcc mi_codigo.c -o ejecutable
