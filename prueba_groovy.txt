@@ -1,0 +1,7 @@
+def calcularTotal(precio, cantidad) {
+    if (cantidad > 0) {
+        return precio * cantidad
+    } else {
+        return 0
+    }
+}
