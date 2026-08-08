@@ -96,3 +96,34 @@ En esta rama estare enviando todos mis avances y este archivo servira para docum
 }
 
 ```
+---
+# Avances realizados
+## Primer avance
+Las palabras reservadas de Java y las agregadas por Groovy son reconocidas por el analizador lexico y ya son divididos en lexemas
+### Asignacion de Tokens
+Los tokens de cada lexema son asignados por medio de `#define` al principio del archivo, se asigna un token por cada palabra reservada.
+### Variables utilizadas
+```
+int contador_lineas = 0;
+int contador_caracteres = 0;
+int contador_enteros = 0;
+```
+Con estas variables llevamos de momento el conteo de los caracteres, lineas de código y numeros enteros, presentes en el código fuente proporcionado.
+### Definicion de Reglas
+```
+DIGITO   [0-9]
+ENTERO   {DIGITO}+
+LETRA    [A-Za-z_$]
+ID       {LETRA}({LETRA}|{DIGITO})*
+WS       [ \t\r]+
+```
+Siendo:
+* DIGITO: para todos los digitos presentes
+* ENTERO: Heredado de digito, pero con la adición de tener el signo + que significa que aceptara cuando haya 1 o mas dígitos.
+*  LETRA: reconoce todas las letras del abecedario entre a y z.
+* ID: Puede ser una combinacion entre digitos y letras.
+* WS: Reconoce todas las tabulaciones y espacios en blanco para poder ignorarlos
+### Ejecución y prubeas
+```
+./proyecto_corto < prueba_groovy.txt
+```
