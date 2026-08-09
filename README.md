@@ -23,7 +23,7 @@ En esta rama estare enviando todos mis avances y este archivo servira para docum
 "transient", "try", "void", "volatile", "while"
 ],
 "groovy_specific": [
-"as", "def", "in", "trait", "property"
+"as", "def", "in", "trait", "property","it","var"
 ]
 },
 "operators": [
@@ -42,7 +42,7 @@ En esta rama estare enviando todos mis avances y este archivo servira para docum
 { "symbol": ".&", "token": "OP_METHOD_PTR", "description": "Method pointer operator" },
 { "symbol": "++", "token": "OP_INC", "description": "Increment" },
 { "symbol": "--", "token": "OP_DEC", "description": "Decrement" },
-{ "symbol": "", "token": "OP_POW", "description": "Power operator" },
+{ "symbol": "**", "token": "OP_POW", "description": "Power operator" },
 { "symbol": "+=", "token": "OP_ASIG_ADD", "description": "Addition assignment" },
 { "symbol": "-=", "token": "OP_ASIG_SUB", "description": "Subtraction assignment" },
 { "symbol": "=", "token": "OP_ASIG_MUL", "description": "Multiplication assignment" },
@@ -60,7 +60,7 @@ En esta rama estare enviando todos mis avances y este archivo servira para docum
 { "symbol": "||", "token": "OP_OR", "description": "Logical OR" },
 { "symbol": "+", "token": "PLUS", "description": "Addition" },
 { "symbol": "-", "token": "MINUS", "description": "Subtraction" },
-{ "symbol": "", "token": "MUL", "description": "Multiplication" },
+{ "symbol": "*", "token": "MUL", "description": "Multiplication" },
 { "symbol": "/", "token": "DIV", "description": "Division" },
 { "symbol": "%", "token": "MOD", "description": "Modulo" },
 { "symbol": "<", "token": "LT", "description": "Less than" },
@@ -125,5 +125,7 @@ Siendo:
 * WS: Reconoce todas las tabulaciones y espacios en blanco para poder ignorarlos
 ### Ejecución y prubeas
 ```
+flex proyecto_corto.l
+gcc lex.yy.c -lfl -o proyecto_corto
 ./proyecto_corto < prueba_groovy.txt
 ```

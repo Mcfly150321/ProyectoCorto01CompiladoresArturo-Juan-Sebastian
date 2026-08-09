@@ -3,7 +3,10 @@
 #include <stdlib.h>
 
 // Definicion de Tokens
+// Identificadores
 #define ID 1
+
+// Palabras Reservadas
 #define PR_ABSTRACT 2
 #define PR_ASSERT 3
 #define PR_BOOLEAN 4
@@ -62,6 +65,61 @@
 #define PR_IN 57
 #define PR_TRAIT 58
 #define PR_PROPERTY 59
+#define PR_IT 60
+#define PR_VAR 61
+
+// Operadores de asignacion
+#define OP_ASIG_SL 62
+#define OP_ASIG_SR 63
+#define OP_ASIG_USR 64
+#define OP_ASIG_POW 65
+
+// Navigation operators
+#define OP_SAFE_NAV 66
+
+// Spread Operators
+#define OP_SPREAD_DOT 67
+#define OP_SPREAD_SAFE 68
+#define OP_ELVIS 69
+#define OP_RANGE_INC 70
+#define OP_RANGE_EXC 71
+#define OP_REGEX_FIND 72
+#define OP_REGEX_MATCH 73
+#define OP_METHOD_PTR 74
+
+// Operadores matematicos
+#define OP_INC 75
+#define OP_DEC 76
+#define OP_POW 77
+#define OP_ASIG_ADD 78
+#define OP_ASIG_SUB 79
+#define OP_ASIG_MUL 80
+#define OP_ASIG_DIV 81
+#define OP_ASIG_MOD 82
+
+// Operadores 
+#define OP_SL 83
+#define OP_SR 84
+#define OP_USR 85
+
+// Operadores de comparacion
+#define OP_EQ 86
+#define OP_NEQ 87
+#define OP_LE 88
+#define OP_GE 89
+#define OP_SPACEHCIP 90
+#define OP_AND 91
+#define OP_OR 92
+
+// Operadores aritmeticos
+#define PLUS 93
+#define MINUS 94
+#define MULT 95
+#define DIV 96
+#define MOD 97
+#define OP_ASSIG 98
+#define NOT 99
+#define LT 100
 
 // Defincion de variables
 int contador_lineas = 0;
@@ -139,6 +197,47 @@ WS       [ \t\r]+
 "in"            { printf("Token: PR_IN\n"); }
 "trait"         { printf("Token: PR_TRAIT\n"); }
 "property"      { printf("Token: PR_PROPERTY\n"); }
+"it"            { printf("Token: PR_IT\n"); }
+"var"           { printf("Token: PR_VAR\n"); }
+
+"<<="           { printf("Token: OP_ASIG_SL\n"); }
+">>="           { printf("Token: OP_ASIG_SR\n"); }
+">>>="          { printf("Token: OP_ASIG_USR\n"); }
+"="             { printf("Token: OP_ASIG\n");}
+"?."            { printf("Token: OP_SAFE_NAV\n"); }
+"."             { printf("Token: OP_SPREAD_DOT\n"); }
+"?"             { printf("Token: OP_SPREAD_SAFE\n");}
+"?:"            { printf("Token: OP_ELVIS\n");}
+".."            { printf("Token: OP_RANGE_INC\n");}
+"..<"           { printf("Token: OP_RANGE_EXC\n");}
+"=~"            { printf("Token: OP_REGEX_FIND\n");}
+"==~"           { printf("Token: OP_REGEX_MATCH\n");}
+"::"            { printf("Token: OP_METHOD_PTR\n");}
+"++"            { printf("Token: OP_INC\n");}
+"--"            { printf("Token: OP_DEC\n"); }
+"**"            { printf("Token: OP_POW\n"); }
+"+="            { printf("Token: OP_ASIG_ADD\n"); }
+"-="            { printf("Token: OP_ASIG_SUB\n"); }
+"*="            { printf("Token: OP_ASIG_MUL\n"); }
+"/="            { printf("Token: OP_ASIG_DIV\n"); }
+"%="            { printf("Token: OP_ASIG_MOD\n"); }
+"<<"            { printf("Token: OP_SL\n"); }
+">>"            { printf("Token: OP_SR\n"); }
+">>>"           { printf("Token: OP_USR\n"); }
+"=="            { printf("Token: OP_EQ\n"); }
+"!="            { printf("Token: OP_NEQ\n"); }
+"<="            { printf("Token: OP_LE\n"); }
+">="            { printf("Token: OP_GE\n"); }
+"<=>"           { printf("Token: OP_SPACEHCIP\n"); }
+"&&"            { printf("Token: OP_AND\n"); }
+"||"            { printf("Token: OP_OR\n"); }
+"+"             { printf("Token: PLUS\n"); }
+"-"             { printf("Token: MINUS\n"); }
+"*"             { printf("Token: MULT\n"); }
+"/"             { printf("Token: DIV\n"); }
+"%"             { printf("Token: MOD\n"); }
+"<"             { printf("Token: LT\n"); }
+
 
 {ID}            { printf("Token: ID -> Lexema: %s\n", yytext); }
 {ENTERO}        { contador_enteros++; printf("Token: ENTERO -> Lexema: %s\n", yytext); }

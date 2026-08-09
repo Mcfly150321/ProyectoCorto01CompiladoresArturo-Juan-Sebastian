@@ -1,4 +1,5 @@
 def calcularTotal(precio, cantidad) {
+    precio++
     if (cantidad > 0) {
         return precio * cantidad
     } else {
