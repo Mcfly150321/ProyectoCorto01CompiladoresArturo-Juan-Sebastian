@@ -1,12 +1,12 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Definicion de Tokens
-// Identificadores
 #define ID 1
 
-// Palabras Reservadas
+// Palabras Reservadas (Indices para nuestro arreglo de conteo)
 #define PR_ABSTRACT 2
 #define PR_ASSERT 3
 #define PR_BOOLEAN 4
@@ -68,181 +68,114 @@
 #define PR_IT 60
 #define PR_VAR 61
 
-// Operadores de asignacion
+// Operadores y otros tokens (del 62 en adelante)
 #define OP_ASIG_SL 62
-#define OP_ASIG_SR 63
-#define OP_ASIG_USR 64
-#define OP_ASIG_POW 65
+// ... (puedes mantener tus defines de operadores igual)
 
-// Navigation operators
-#define OP_SAFE_NAV 66
+// Estructura para llevar el conteo de palabras reservadas
+typedef struct {
+    const char *nombre;
+    int conteo;
+} InfoPalabra;
 
-// Spread Operators
-#define OP_SPREAD_DOT 67
-#define OP_SPREAD_SAFE 68
-#define OP_ELVIS 69
-#define OP_RANGE_INC 70
-#define OP_RANGE_EXC 71
-#define OP_REGEX_FIND 72
-#define OP_REGEX_MATCH 73
-#define OP_METHOD_PTR 74
+// Tabla con todas las palabras reservadas que buscas
+InfoPalabra tabla_pr[] = {
+    {"abstract", 0}, {"assert", 0}, {"boolean", 0}, {"break", 0}, {"byte", 0},
+    {"case", 0}, {"catch", 0}, {"char", 0}, {"class", 0}, {"const", 0},
+    {"continue", 0}, {"default", 0}, {"do", 0}, {"double", 0}, {"else", 0},
+    {"enum", 0}, {"extends", 0}, {"false", 0}, {"final", 0}, {"finally", 0},
+    {"float", 0}, {"for", 0}, {"goto", 0}, {"if", 0}, {"implements", 0},
+    {"import", 0}, {"instanceof", 0}, {"int", 0}, {"interface", 0}, {"long", 0},
+    {"native", 0}, {"new", 0}, {"null", 0}, {"package", 0}, {"private", 0},
+    {"protected", 0}, {"public", 0}, {"return", 0}, {"short", 0}, {"static", 0},
+    {"strictfp", 0}, {"super", 0}, {"switch", 0}, {"synchronized", 0}, {"this", 0},
+    {"throw", 0}, {"throws", 0}, {"transient", 0}, {"try", 0}, {"true", 0},
+    {"void", 0}, {"volatile", 0}, {"while", 0}, {"as", 0}, {"def", 0},
+    {"in", 0}, {"trait", 0}, {"property", 0}, {"it", 0}, {"var", 0}
+};
+int total_pr_registradas = 60;
 
-// Operadores matematicos
-#define OP_INC 75
-#define OP_DEC 76
-#define OP_POW 77
-#define OP_ASIG_ADD 78
-#define OP_ASIG_SUB 79
-#define OP_ASIG_MUL 80
-#define OP_ASIG_DIV 81
-#define OP_ASIG_MOD 82
-
-// Operadores 
-#define OP_SL 83
-#define OP_SR 84
-#define OP_USR 85
-
-// Operadores de comparacion
-#define OP_EQ 86
-#define OP_NEQ 87
-#define OP_LE 88
-#define OP_GE 89
-#define OP_SPACEHCIP 90
-#define OP_AND 91
-#define OP_OR 92
-
-// Operadores aritmeticos
-#define PLUS 93
-#define MINUS 94
-#define MULT 95
-#define DIV 96
-#define MOD 97
-#define OP_ASSIG 98
-#define NOT 99
-#define LT 100
-
-// Defincion de variables
-int contador_lineas = 0;
+// Variables globales para el reporte
+int contador_lineas = 1;
 int contador_caracteres = 0;
 int contador_enteros = 0;
+int contador_float = 0;
+int contador_booleanos = 0;
+int contador_operadores = 0;
+int contador_ids = 0;
+
+// Función auxiliar para sumarizar la palabra reservada encontrada
+void registrar_pr(const char *palabra) {
+    for (int i = 0; i < total_pr_registradas; i++) {
+        if (strcmp(tabla_pr[i].nombre, palabra) == 0) {
+            tabla_pr[i].conteo++;
+            if (strcmp(palabra, "boolean") == 0 || strcmp(palabra, "true") == 0 || strcmp(palabra, "false") == 0) {
+                contador_booleanos++;
+            }
+            break;
+        }
+    }
+}
+
+// Función de comparación para ordenar de forma descendente (de mayor a menor)
+int comparar_descendente(const void *a, const void *b) {
+    InfoPalabra *p1 = (InfoPalabra *)a;
+    InfoPalabra *p2 = (InfoPalabra *)b;
+    return p2->conteo - p1->conteo; 
+}
 %}
 
 DIGITO   [0-9]
 ENTERO   {DIGITO}+
+FLOAT    {DIGITO}+\.{DIGITO}+
 LETRA    [A-Za-z_$]
 ID       {LETRA}({LETRA}|{DIGITO})*
 WS       [ \t\r]+
 
 %%
 
-\n              { contador_lineas++; }
-{WS}            { /* Ignorar espacios y tabulaciones */ }
+\n              { contador_lineas++; contador_caracteres += yyleng; }
+{WS}            { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 
-"abstract"      { printf("Token: PR_ABSTRACT\n"); }
-"assert"        { printf("Token: PR_ASSERT\n"); }
-"boolean"       { printf("Token: PR_BOOLEAN\n"); }
-"break"         { printf("Token: PR_BREAK\n"); }
-"byte"          { printf("Token: PR_BYTE\n"); }
-"case"          { printf("Token: PR_CASE\n"); }
-"catch"         { printf("Token: PR_CATCH\n"); }
-"char"          { printf("Token: PR_CHAR\n"); }
-"class"         { printf("Token: PR_CLASS\n"); }
-"const"         { printf("Token: PR_CONST\n"); }
-"continue"      { printf("Token: PR_CONTINUE\n"); }
-"default"       { printf("Token: PR_DEFAULT\n"); }
-"do"            { printf("Token: PR_DO\n"); }
-"double"        { printf("Token: PR_DOUBLE\n"); }
-"else"          { printf("Token: PR_ELSE\n"); }
-"enum"          { printf("Token: PR_ENUM\n"); }
-"extends"       { printf("Token: PR_EXTENDS\n"); }
-"false"         { printf("Token: PR_FALSE\n"); }
-"final"         { printf("Token: PR_FINAL\n"); }
-"finally"       { printf("Token: PR_FINALLY\n"); }
-"float"         { printf("Token: PR_FLOAT\n"); }
-"for"           { printf("Token: PR_FOR\n"); }
-"goto"          { printf("Token: PR_GOTO\n"); }
-"if"            { printf("Token: PR_IF\n"); }
-"implements"    { printf("Token: PR_IMPLEMENTS\n"); }
-"import"        { printf("Token: PR_IMPORT\n"); }
-"instanceof"    { printf("Token: PR_INSTANCEOF\n"); }
-"int"           { printf("Token: PR_INT\n"); }
-"interface"     { printf("Token: PR_INTERFACE\n"); }
-"long"          { printf("Token: PR_LONG\n"); }
-"native"        { printf("Token: PR_NATIVE\n"); }
-"new"           { printf("Token: PR_NEW\n"); }
-"null"          { printf("Token: PR_NULL\n"); }
-"package"       { printf("Token: PR_PACKAGE\n"); }
-"private"       { printf("Token: PR_PRIVATE\n"); }
-"protected"     { printf("Token: PR_PROTECTED\n"); }
-"public"        { printf("Token: PR_PUBLIC\n"); }
-"return"        { printf("Token: PR_RETURN\n"); }
-"short"         { printf("Token: PR_SHORT\n"); }
-"static"        { printf("Token: PR_STATIC\n"); }
-"strictfp"      { printf("Token: PR_STRICTFP\n"); }
-"super"         { printf("Token: PR_SUPER\n"); }
-"switch"        { printf("Token: PR_SWITCH\n"); }
-"synchronized"  { printf("Token: PR_SYNCHRONIZED\n"); }
-"this"          { printf("Token: PR_THIS\n"); }
-"throw"         { printf("Token: PR_THROW\n"); }
-"throws"        { printf("Token: PR_THROWS\n"); }
-"transient"     { printf("Token: PR_TRANSIENT\n"); }
-"try"           { printf("Token: PR_TRY\n"); }
-"true"          { printf("Token: PR_TRUE\n"); }
-"void"          { printf("Token: PR_VOID\n"); }
-"volatile"      { printf("Token: PR_VOLATILE\n"); }
-"while"         { printf("Token: PR_WHILE\n"); }
+"abstract"|"assert"|"boolean"|"break"|"byte"|"case"|"catch"|"char"|"class"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extends"|"false"|"final"|"finally"|"float"|"for"|"goto"|"if"|"implements"|"import"|"instanceof"|"int"|"interface"|"long"|"native"|"new"|"null"|"package"|"private"|"protected"|"public"|"return"|"short"|"static"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"true"|"void"|"volatile"|"while"|"as"|"def"|"in"|"trait"|"property"|"it"|"var" {
+    registrar_pr(yytext);
+    contador_caracteres += yyleng;
+    printf("Token: PR_%s\n", yytext);
+}
 
-"as"            { printf("Token: PR_AS\n"); }
-"def"           { printf("Token: PR_DEF\n"); }
-"in"            { printf("Token: PR_IN\n"); }
-"trait"         { printf("Token: PR_TRAIT\n"); }
-"property"      { printf("Token: PR_PROPERTY\n"); }
-"it"            { printf("Token: PR_IT\n"); }
-"var"           { printf("Token: PR_VAR\n"); }
-
-"<<="           { printf("Token: OP_ASIG_SL\n"); }
-">>="           { printf("Token: OP_ASIG_SR\n"); }
-">>>="          { printf("Token: OP_ASIG_USR\n"); }
-"="             { printf("Token: OP_ASIG\n");}
-"?."            { printf("Token: OP_SAFE_NAV\n"); }
-"."             { printf("Token: OP_SPREAD_DOT\n"); }
-"?"             { printf("Token: OP_SPREAD_SAFE\n");}
-"?:"            { printf("Token: OP_ELVIS\n");}
-".."            { printf("Token: OP_RANGE_INC\n");}
-"..<"           { printf("Token: OP_RANGE_EXC\n");}
-"=~"            { printf("Token: OP_REGEX_FIND\n");}
-"==~"           { printf("Token: OP_REGEX_MATCH\n");}
-"::"            { printf("Token: OP_METHOD_PTR\n");}
-"++"            { printf("Token: OP_INC\n");}
-"--"            { printf("Token: OP_DEC\n"); }
-"**"            { printf("Token: OP_POW\n"); }
-"+="            { printf("Token: OP_ASIG_ADD\n"); }
-"-="            { printf("Token: OP_ASIG_SUB\n"); }
-"*="            { printf("Token: OP_ASIG_MUL\n"); }
-"/="            { printf("Token: OP_ASIG_DIV\n"); }
-"%="            { printf("Token: OP_ASIG_MOD\n"); }
-"<<"            { printf("Token: OP_SL\n"); }
-">>"            { printf("Token: OP_SR\n"); }
-">>>"           { printf("Token: OP_USR\n"); }
-"=="            { printf("Token: OP_EQ\n"); }
-"!="            { printf("Token: OP_NEQ\n"); }
-"<="            { printf("Token: OP_LE\n"); }
-">="            { printf("Token: OP_GE\n"); }
-"<=>"           { printf("Token: OP_SPACEHCIP\n"); }
-"&&"            { printf("Token: OP_AND\n"); }
-"||"            { printf("Token: OP_OR\n"); }
-"+"             { printf("Token: PLUS\n"); }
-"-"             { printf("Token: MINUS\n"); }
-"*"             { printf("Token: MULT\n"); }
-"/"             { printf("Token: DIV\n"); }
-"%"             { printf("Token: MOD\n"); }
-"<"             { printf("Token: LT\n"); }
+"<<="|"ве="|"|>>="|"**="|"?."|"*."|"?*\""|"?:"|".."|'..<|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"\?" {
+    contador_operadores++;
+    contador_caracteres += yyleng;
+    printf("Token: OPERADOR -> Lexema: %s\n", yytext);
+}
 
 
-{ID}            { printf("Token: ID -> Lexema: %s\n", yytext); }
-{ENTERO}        { contador_enteros++; printf("Token: ENTERO -> Lexema: %s\n", yytext); }
+[.,:;(){}\[\]] {
+    contador_caracteres += yyleng;
+    printf("Token: DELIMITADOR/PUNTUACION -> Lexema: %s\n", yytext);
+}
 
-.               { contador_caracteres++; }
+{ID}            { 
+    contador_ids++; 
+    contador_caracteres += yyleng;
+    printf("Token: ID -> Lexema: %s\n", yytext); 
+}
+
+{ENTERO}        { 
+    contador_enteros++; 
+    contador_caracteres += yyleng;
+    printf("Token: ENTERO -> Lexema: %s\n", yytext); 
+}
+
+{FLOAT}         { 
+    contador_float++; 
+    contador_caracteres += yyleng;
+    printf("Token: FLOAT -> Lexema: %s\n", yytext); 
+}
+
+.               { 
+    contador_caracteres += yyleng; 
+}
 
 %%
 
@@ -250,9 +183,27 @@ int yywrap() { return 1; }
 
 int main() {
     yylex();
-    printf("\n--- Resumen ---");
-    printf("\nTotal de lineas: %i", contador_lineas);
-    printf("\nTotal de caracteres (no reconocidos/sueltos): %i", contador_caracteres);
-    printf("\nTotal de enteros: %i\n", contador_enteros);
+
+    // Ordenar las palabras reservadas de mayor a menor frecuencia
+    qsort(tabla_pr, total_pr_registradas, sizeof(InfoPalabra), comparar_descendente);
+
+    printf("\n========================================");
+    printf("\n               REPORTE 1                ");
+    printf("\n========================================");
+    printf("\n- Cantidad de lineas de codigo: %i", contador_lineas);
+    printf("\n- Cantidad de caracteres encontrados: %i", contador_caracteres);
+    printf("\n- Cantidad de numeros enteros encontrados: %i", contador_enteros);
+    printf("\n- Cantidad de numeros flotantes encontrados: %i", contador_float);
+    printf("\n- Cantidad de identificadores encontrados: %i", contador_ids);
+    printf("\n- Cantidad de valores booleanos: %i", contador_booleanos);
+    printf("\n- Cantidad de operadores encontrados: %i", contador_operadores);
+    
+    printf("\n\n--- Conteo de Palabras Reservadas (Orden Descendente) ---");
+    for (int i = 0; i < total_pr_registradas; i++) {
+        if (tabla_pr[i].conteo > 0) {
+            printf("\n  > %s: %d", tabla_pr[i].nombre, tabla_pr[i].conteo);
+        }
+    }
+    printf("\n========================================\n");
     return 0;
 }

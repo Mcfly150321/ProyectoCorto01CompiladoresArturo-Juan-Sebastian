@@ -98,34 +98,53 @@ En esta rama estare enviando todos mis avances y este archivo servira para docum
 ```
 ---
 # Avances realizados
-## Primer avance
-Las palabras reservadas de Java y las agregadas por Groovy son reconocidas por el analizador lexico y ya son divididos en lexemas
-### Asignacion de Tokens
-Los tokens de cada lexema son asignados por medio de `#define` al principio del archivo, se asigna un token por cada palabra reservada.
-### Variables utilizadas
+## Primer reporte completado
+### Variables y Contadores del Reporte
+Se incorporaron variables de control en C para generar un reporte estadístico completo del archivo fuente analizado:
 ```
-int contador_lineas = 0;
-int contador_caracteres = 0;
+int contador_lineas = 1;
+int contador_caracteres = 0; // Conteo exacto mediante yyleng
 int contador_enteros = 0;
+int contador_float = 0;
+int contador_booleanos = 0;
+int contador_operadores = 0;
+int contador_ids = 0;
 ```
-Con estas variables llevamos de momento el conteo de los caracteres, lineas de código y numeros enteros, presentes en el código fuente proporcionado.
-### Definicion de Reglas
+
+### Definición de Expresiones Regulares Principales
 ```
 DIGITO   [0-9]
 ENTERO   {DIGITO}+
+FLOAT    {DIGITO}+\.{DIGITO}+
 LETRA    [A-Za-z_$]
 ID       {LETRA}({LETRA}|{DIGITO})*
 WS       [ \t\r]+
 ```
-Siendo:
-* DIGITO: para todos los digitos presentes
-* ENTERO: Heredado de digito, pero con la adición de tener el signo + que significa que aceptara cuando haya 1 o mas dígitos.
-*  LETRA: reconoce todas las letras del abecedario entre a y z.
-* ID: Puede ser una combinacion entre digitos y letras.
-* WS: Reconoce todas las tabulaciones y espacios en blanco para poder ignorarlos
-### Ejecución y prubeas
+* DIGITO / ENTERO: Captura números enteros de una o más cifras.
+* FLOAT: Reconoce números de punto flotante con decimales.
+* LETRA / ID: Identificadores válidos que inician con letra, guion bajo o símbolo $ permitiendo dígitos subsecuentes.
+* WS: Ignora espacios en blanco y tabulaciones horizontales.
+
+Al finalizar el análisis del código fuente, el programa despliega en consola:
+
+1. Cantidad total de líneas de código.
+
+2. Cantidad total de caracteres encontrados (utilizando la longitud del buffer yyleng).
+3. Conteo de números enteros.
+4. Conteo de números flotantes.
+5. Conteo de identificadores.
+6. Conteo de valores booleanos (true, false, boolean).
+7. Conteo total de operadores aritméticos, lógicos, de asignación y compuestos.
+8. Conteo detallado de cada palabra reservada encontrada, ordenado de forma descendente (empleando una estructura de registros en C y ordenamiento qsort).
+
+### Instruciones de ejecucio
 ```
+# 1. Generar el archivo C con Flex
 flex proyecto_corto.l
-gcc lex.yy.c -lfl -o proyecto_corto
+
+# 2. Compilar con GCC y la librería fl
+gcc lex.yy.c -o proyecto_corto -lfl
+
+# 3. Ejecutar pasando un archivo de código fuente de prueba en Groovy
 ./proyecto_corto < prueba_groovy.txt
 ```

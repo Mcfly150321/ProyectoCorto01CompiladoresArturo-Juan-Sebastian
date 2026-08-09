@@ -1,8 +1,14 @@
 def calcularTotal(precio, cantidad) {
+    // Probando operadores y flotantes
+    double impuesto = 1.15
     precio++
-    if (cantidad > 0) {
-        return precio * cantidad
+    
+    boolean activo = true
+    boolean vacio = false
+    
+    if (cantidad > 0 && activo) {
+        return precio * cantidad * impuesto
     } else {
-        return 0
+        return 0.0
     }
 }
