@@ -11,7 +11,8 @@ typedef enum {
     TOKEN_IDENTIFICADOR,
     TOKEN_BOOLEANO,
     TOKEN_OPERADOR,
-    TOKEN_RESERVADA
+    TOKEN_RESERVADA,
+    TOKEN_COMENTARIO
 } TipoToken;
 
 typedef struct {
@@ -28,7 +29,11 @@ typedef struct {
 //defino mis propios contadores de cosas para no romper los de sebastian
 int c_int=0;
 int c_float=0;
-int c_ident=0;
+int c_ids=0;
+int c_bool=0;
+int c_ope=0;
+int c_res=0;
+int c_comentarios=0;
 int c_tok=0;
 
 
@@ -181,16 +186,27 @@ WS       [ \t\r]+
 \n              { contador_lineas++; contador_caracteres += yyleng; }
 {WS}            { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 
-"abstract"|"assert"|"boolean"|"break"|"byte"|"case"|"catch"|"char"|"class"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extends"|"false"|"final"|"finally"|"float"|"for"|"goto"|"if"|"implements"|"import"|"instanceof"|"int"|"interface"|"long"|"native"|"new"|"null"|"package"|"private"|"protected"|"public"|"return"|"short"|"static"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"true"|"void"|"volatile"|"while"|"as"|"def"|"in"|"trait"|"property"|"it"|"var" {
-    registrar_pr(yytext);
+("abstract"|"assert"|"boolean"|"break"|"byte"|"case"|"catch"|"char"|"class"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extends"|"final"|"finally"|"float"|"for"|"goto"|"if"|"implements"|"import"|"instanceof"|"int"|"interface"|"long"|"native"|"new"|"null"|"package"|"private"|"protected"|"public"|"return"|"short"|"static"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"void"|"volatile"|"while"|"as"|"def"|"in"|"trait"|"property"|"it"|"var") {
     contador_caracteres += yyleng;
+    registrar_token(TOKEN_RESERVADA);
+    c_res++;
+}
+
+"true"|"false" {
+    contador_caracteres += yyleng;
+    registrar_token(TOKEN_BOOLEANO);
+    c_bool++;
+}
+"//".* {
+  //aqui no hace nada, solo es para sacar a los comentarios de conteo de operadores
 }
 
 "<<="|"ве="|"|>>="|"**="|"?."|"*."|"?*\""|"?:"|".."|'..<|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"\?" {
     contador_operadores++;
     contador_caracteres += yyleng;
+    registrar_token(TOKEN_OPERADOR);
+    c_ope++;
 }
-
 
 [.,:;(){}\[\]] {
     contador_caracteres += yyleng;
@@ -199,6 +215,8 @@ WS       [ \t\r]+
 {ID}            { 
     contador_ids++; 
     contador_caracteres += yyleng;
+    registrar_token(TOKEN_IDENTIFICADOR);
+    c_ids++;
 }
 
 {ENTERO}        { 
@@ -228,31 +246,60 @@ int yywrap() { return 1; }
 int main() {
     yylex();
 
-    // aqui nuestro impresor solo saca lso enteros porque solo esos objetos hemos definido
-    printf("--- Conteo de Enteros ---\n");
-   for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo==TOKEN_ENTERO)
-    {
 
-    printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
-
+printf("--- Conteo de Enteros ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_ENTERO) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
     }
-        
+}
+
+printf("\n--- Conteo de Flotantes ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_FLOTANTE) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
     }
+}
 
-printf("--- Conteo de Flotantes ---\n");
- for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo==TOKEN_FLOTANTE)
-    {
-    printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+printf("\n--- Conteo de Identificadores ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_IDENTIFICADOR) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
     }
+}
+
+printf("\n--- Conteo de Booleanos ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_BOOLEANO) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
     }
+}
+
+printf("\n--- Conteo de Operadores ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_OPERADOR) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    }
+}
+
+printf("\n--- Conteo de Palabras Reservadas ---\n");
+for (int i = 0; i < c_tok; i++) {
+    if (RegTok[i].tipo == TOKEN_RESERVADA) {
+        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    }
+}
+
+printf("\n--- Cantidades Totales ---\n");
+printf("Cantidad de líneas de código: %d\n", contador_lineas);
+printf("Cantidad de caracteres encontrados: %d\n", contador_caracteres);
+printf("Cantidad de números enteros encontrados: %d\n", c_int);
+printf("Cantidad de números flotantes encontrados: %d\n", c_float);
+printf("Cantidad de identificadores encontrados: %d\n", c_ids);
+printf("Cantidad de valores booleanos: %d\n", c_bool);
+printf("Cantidad de operadores encontrados: %d\n", c_ope);
+printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
+printf("Total general de tokens: %d\n", c_tok);
 
 
-
- printf("--- Recuento Variables ---\n");       
-    printf("Total de tokens: %d\n", c_tok);
-    printf("Total de enteros: %d\n", c_int);
-    printf("Total de flotantes: %d\n", c_float);
     return 0;
 }
