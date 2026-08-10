@@ -22,7 +22,7 @@ class GatewayPago implements IPago {
         for (int i = 0; i < 3; i = i + 1) {
             monto = monto ~ 1.05 // Carácter '~' no válido
         }
-
+        transaccion_valida++
         return transaccion_valida
     }
 }

@@ -7,22 +7,146 @@
 int nivel_llaves = 0; // 0 significa ámbito global
 bool es_declaracion = false; // Variable para indicar si estamos en una declaración de variable
 
+#define ID 1
+
 typedef enum {
     PR_NINGUNA = 0,
-    PR_ABSTRACT, PR_ASSERT, PR_BOOLEAN, PR_BREAK, PR_BYTE,
-    PR_CASE, PR_CATCH, PR_CHAR, PR_CLASS, PR_CONST,
-    PR_CONTINUE, PR_DEFAULT, PR_DO, PR_DOUBLE, PR_ELSE,
-    PR_ENUM, PR_EXTENDS, PR_FALSE, PR_FINAL, PR_FINALLY,
-    PR_FLOAT, PR_FOR, PR_GOTO, PR_IF, PR_IMPLEMENTS,
-    PR_IMPORT, PR_INSTANCEOF, PR_INT, PR_INTERFACE, PR_LONG,
-    PR_NATIVE, PR_NEW, PR_NULL, PR_PACKAGE, PR_PRIVATE,
-    PR_PROTECTED, PR_PUBLIC, PR_RETURN, PR_SHORT, PR_STATIC,
-    PR_STRICTFP, PR_SUPER, PR_SWITCH, PR_SYNCHRONIZED, PR_THIS,
-    PR_THROW, PR_THROWS, PR_TRANSIENT, PR_TRY, PR_TRUE,
-    PR_VOID, PR_VOLATILE, PR_WHILE, PR_AS, PR_DEF,
-    PR_IN, PR_TRAIT, PR_PROPERTY, PR_IT, PR_VAR,
-    TOTAL_PALABRAS_RESERVADAS
+    
+    // Al asignarle 2, C continúa automáticamente asignando 3, 4, 5...
+    PR_ABSTRACT = 2, 
+    PR_ASSERT, 
+    PR_BOOLEAN, 
+    PR_BREAK, 
+    PR_BYTE,
+    PR_CASE, 
+    PR_CATCH, 
+    PR_CHAR, 
+    PR_CLASS, 
+    PR_CONST,
+    PR_CONTINUE, 
+    PR_DEFAULT, 
+    PR_DO, 
+    PR_DOUBLE, 
+    PR_ELSE,
+    PR_ENUM, 
+    PR_EXTENDS, 
+    PR_FALSE, 
+    PR_FINAL, 
+    PR_FINALLY,
+    PR_FLOAT, 
+    PR_FOR, 
+    PR_GOTO, 
+    PR_IF, 
+    PR_IMPLEMENTS,
+    PR_IMPORT, 
+    PR_INSTANCEOF, 
+    PR_INT, 
+    PR_INTERFACE, 
+    PR_LONG,
+    PR_NATIVE, 
+    PR_NEW, 
+    PR_NULL, 
+    PR_PACKAGE, 
+    PR_PRIVATE,
+    PR_PROTECTED, 
+    PR_PUBLIC, 
+    PR_RETURN, 
+    PR_SHORT, 
+    PR_STATIC,
+    PR_STRICTFP, 
+    PR_SUPER, 
+    PR_SWITCH, 
+    PR_SYNCHRONIZED, 
+    PR_THIS,
+    PR_THROW, 
+    PR_THROWS, 
+    PR_TRANSIENT, 
+    PR_TRY, 
+    PR_TRUE,
+    PR_VOID, 
+    PR_VOLATILE, 
+    PR_WHILE, 
+    PR_AS, 
+    PR_DEF,
+    PR_IN, 
+    PR_TRAIT, 
+    PR_PROPERTY, 
+    PR_IT, 
+    PR_VAR, 
+    PR_STRING, // Vale 62
+    
+    TOTAL_PALABRAS_RESERVADAS // Vale 63
 } SubtipoReservada;
+
+// Nombres de las palabras reservadas alineados exacto con el enum
+const char *nombres_pr[] = {
+    "",             // Índice 0  (PR_NINGUNA)
+    "",             // Índice 1  (Espacio reservado para el token 1 / ID)
+    "abstract",     // Índice 2  (PR_ABSTRACT)
+    "assert",       // Índice 3  (PR_ASSERT)
+    "boolean",      // Índice 4  (PR_BOOLEAN)
+    "break",        // Índice 5
+    "byte",         // Índice 6
+    "case",         // Índice 7
+    "catch",        // Índice 8
+    "char",         // Índice 9
+    "class",        // Índice 10
+    "const",        // Índice 11
+    "continue",     // Índice 12
+    "default",      // Índice 13
+    "do",           // Índice 14
+    "double",       // Índice 15
+    "else",         // Índice 16
+    "enum",         // Índice 17
+    "extends",      // Índice 18
+    "false",        // Índice 19
+    "final",        // Índice 20
+    "finally",      // Índice 21
+    "float",        // Índice 22
+    "for",          // Índice 23
+    "goto",         // Índice 24
+    "if",           // Índice 25
+    "implements",   // Índice 26
+    "import",       // Índice 27
+    "instanceof",   // Índice 28
+    "int",          // Índice 29
+    "interface",    // Índice 30
+    "long",         // Índice 31
+    "native",       // Índice 32
+    "new",          // Índice 33
+    "null",         // Índice 34
+    "package",      // Índice 35
+    "private",      // Índice 36
+    "protected",    // Índice 37
+    "public",       // Índice 38
+    "return",       // Índice 39
+    "short",        // Índice 40
+    "static",       // Índice 41
+    "strictfp",     // Índice 42
+    "super",        // Índice 43
+    "switch",       // Índice 44
+    "synchronized", // Índice 45
+    "this",         // Índice 46
+    "throw",        // Índice 47
+    "throws",       // Índice 48
+    "transient",    // Índice 49
+    "try",          // Índice 50
+    "true",         // Índice 51
+    "void",         // Índice 52
+    "volatile",     // Índice 53
+    "while",        // Índice 54
+    "as",           // Índice 55
+    "def",          // Índice 56
+    "in",           // Índice 57
+    "trait",        // Índice 58
+    "property",     // Índice 59
+    "it",           // Índice 60
+    "var",          // Índice 61
+    "String"        // Índice 62 (PR_STRING)
+};
+
+// Tus operadores empiezan después del último elemento del enum (TOTAL_PALABRAS_RESERVADAS)
+#define OP_ASIG_SL 63
 
 typedef enum {
     TOKEN_ENTERO,
@@ -62,22 +186,6 @@ int c_err = 0;
 // Arreglo para llevar la cuenta de cada palabra reservada
 int conteo_pr[TOTAL_PALABRAS_RESERVADAS] = {0};
 
-// Nombres de las palabras reservadas en el mismo orden que el enum (sin contar PR_NINGUNA)
-const char *nombres_pr[] = {
-    "", // Posición 0 coincide con PR_NINGUNA
-    "abstract", "assert", "boolean", "break", "byte",
-    "case", "catch", "char", "class", "const",
-    "continue", "default", "do", "double", "else",
-    "enum", "extends", "false", "final", "finally",
-    "float", "for", "goto", "if", "implements",
-    "import", "instanceof", "int", "interface", "long",
-    "native", "new", "null", "package", "private",
-    "protected", "public", "return", "short", "static",
-    "strictfp", "super", "switch", "synchronized", "this",
-    "throw", "throws", "transient", "try", "true",
-    "void", "volatile", "while", "as", "def",
-    "in", "trait", "property", "it", "var"
-};
 
 // Estructura para asociar Nombre -> Ámbito
 typedef struct {
@@ -100,74 +208,6 @@ int c_tok = 0;
 
 Token RegTok[2000];
 
-// Definicion de Tokens
-#define ID 1
-
-// Palabras Reservadas (indices para el arreglo de conteo)
-#define PR_ABSTRACT 2
-#define PR_ASSERT 3
-#define PR_BOOLEAN 4
-#define PR_BREAK 5
-#define PR_BYTE 6
-#define PR_CASE 7
-#define PR_CATCH 8
-#define PR_CHAR 9
-#define PR_CLASS 10
-#define PR_CONST 11
-#define PR_CONTINUE 12
-#define PR_DEFAULT 13
-#define PR_DO 14
-#define PR_DOUBLE 15
-#define PR_ELSE 16
-#define PR_ENUM 17
-#define PR_EXTENDS 18
-#define PR_FALSE 19
-#define PR_FINAL 20
-#define PR_FINALLY 21
-#define PR_FLOAT 22
-#define PR_FOR 23
-#define PR_GOTO 24
-#define PR_IF 25
-#define PR_IMPLEMENTS 26
-#define PR_IMPORT 27
-#define PR_INSTANCEOF 28
-#define PR_INT 29
-#define PR_INTERFACE 30
-#define PR_LONG 31
-#define PR_NATIVE 32
-#define PR_NEW 33
-#define PR_NULL 34
-#define PR_PACKAGE 35
-#define PR_PRIVATE 36
-#define PR_PROTECTED 37
-#define PR_PUBLIC 38
-#define PR_RETURN 39
-#define PR_SHORT 40
-#define PR_STATIC 41
-#define PR_STRICTFP 42
-#define PR_SUPER 43
-#define PR_SWITCH 44
-#define PR_SYNCHRONIZED 45
-#define PR_THIS 46
-#define PR_THROW 47
-#define PR_THROWS 48
-#define PR_TRANSIENT 49
-#define PR_TRY 50
-#define PR_TRUE 51
-#define PR_VOID 52
-#define PR_VOLATILE 53
-#define PR_WHILE 54
-#define PR_AS 55
-#define PR_DEF 56
-#define PR_IN 57
-#define PR_TRAIT 58
-#define PR_PROPERTY 59
-#define PR_IT 60
-#define PR_VAR 61
-#define PR_STRING 62
-
-// Operadores y otros tokens (del 62 en adelante)
-#define OP_ASIG_SL 63
 
 // Variables globales para el reporte
 int contador_lineas = 1;
@@ -245,12 +285,17 @@ void registrar_token(TipoToken tipo) {
 
 void registrar_palabra_reservada(SubtipoReservada subtipo) {
     strcpy(RegTok[c_tok].lexema, yytext);
-    RegTok[c_tok].tipo = TOKEN_RESERVADA;
-    RegTok[c_tok].subtipo_pr = subtipo;
+    
+    // Corregido: El tipo general siempre es TOKEN_RESERVADA (5)
+    RegTok[c_tok].tipo = TOKEN_RESERVADA; 
+    
+    // El subtipo específico guarda la palabra reservada (PR_BOOLEAN, PR_INT, etc.)
+    RegTok[c_tok].subtipo_pr = subtipo; 
+    
     RegTok[c_tok].linea = contador_lineas;
     c_tok++;
     c_res++;
-    // Suma 1 a la cuenta individual de esta palabra
+    
     conteo_pr[subtipo]++;
 }
 
@@ -471,7 +516,7 @@ printf("--- Conteo de Enteros ---\n");
     printf("\n--- Conteo de Operadores ---\n");
     for (int i = 0; i < c_tok; i++) {
         if (RegTok[i].tipo == TOKEN_OPERADOR) {
-            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+            printf("Lexema: %s | Linea: %d | Token: %s_%s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].lexema);
         }
     }
 
@@ -480,23 +525,40 @@ printf("--- Conteo de Enteros ---\n");
         printf("Error: %s | Linea: %d\n", RegErr[i].codigo, RegErr[i].linea);
     }
 
+   printf("\n--- Conteo de Palabras Reservadas ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].subtipo_pr > PR_NINGUNA && RegTok[i].subtipo_pr < TOTAL_PALABRAS_RESERVADAS) {
+            printf("Lexema: %-12s | Linea: %-3d | Token: TOKEN_RESERVADA_%s", 
+                   RegTok[i].lexema, 
+                   RegTok[i].linea, 
+                   nombres_pr[RegTok[i].subtipo_pr]); // Sin restar nada, acceso directo 1:1
+            printf("\n");
+                }
+
+    }
+
     // --- Filtrar, ordenar e imprimir palabras reservadas ---
     InfoPalabra lista_pr[TOTAL_PALABRAS_RESERVADAS];
     int total_unicas = 0;
 
-    for (int i = 1; i < TOTAL_PALABRAS_RESERVADAS; i++) {
+    // Empezamos en PR_ABSTRACT (2) porque 0 es PR_NINGUNA y 1 es omitido
+    for (int i = PR_ABSTRACT; i < TOTAL_PALABRAS_RESERVADAS; i++) {
         if (conteo_pr[i] > 0) {
-            strcpy(lista_pr[total_unicas].palabra, nombres_pr[i - 1]);
+            // Copia directa usando la posición 'i'
+            strncpy(lista_pr[total_unicas].palabra, nombres_pr[i], sizeof(lista_pr[total_unicas].palabra) - 1);
+            lista_pr[total_unicas].palabra[sizeof(lista_pr[total_unicas].palabra) - 1] = '\0';
             lista_pr[total_unicas].conteo = conteo_pr[i];
             total_unicas++;
         }
     }
 
-    qsort(lista_pr, total_unicas, sizeof(InfoPalabra), comparar_descendente);
+    if (total_unicas > 0) {
+        qsort(lista_pr, total_unicas, sizeof(InfoPalabra), comparar_descendente);
 
-    printf("\n--- Conteo de Palabras Reservadas (Orden Descendente) ---\n");
-    for (int i = 0; i < total_unicas; i++) {
-        printf("Palabra: %-12s | Apariciones: %d\n", lista_pr[i].palabra, lista_pr[i].conteo);
+        printf("\n--- Conteo de Palabras Reservadas (Orden Descendente) ---\n");
+        for (int i = 0; i < total_unicas; i++) {
+            printf("Palabra: %-12s | Apariciones: %d\n", lista_pr[i].palabra, lista_pr[i].conteo);
+        }
     }
 
     printf("\n--- Cantidades Totales ---\n");
