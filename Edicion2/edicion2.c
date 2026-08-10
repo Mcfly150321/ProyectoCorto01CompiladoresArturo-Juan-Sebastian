@@ -626,13 +626,19 @@ typedef struct {
 } Token;
 
 
+
+//esta es una funcion para registrar tokens y no andar repitiendo el bloque de codigo
+
+
 //defino mis propios contadores de cosas para no romper los de sebastian
 int c_int=0;
 int c_float=0;
 int c_ident=0;
 int c_tok=0;
 
+
 Token RegTok[200];
+
 
 // Definicion de Tokens
 #define ID 1
@@ -754,8 +760,18 @@ int comparar_descendente(const void *a, const void *b) {
     InfoPalabra *p2 = (InfoPalabra *)b;
     return p2->conteo - p1->conteo; 
 }
-#line 757 "edicion2.c"
-#line 758 "edicion2.c"
+
+
+void registrar_token(TipoToken tipo) {
+    strcpy(RegTok[c_tok].lexema, yytext);
+    RegTok[c_tok].tipo = tipo;
+    RegTok[c_tok].linea = contador_lineas;
+    c_tok++;
+}
+
+
+#line 773 "edicion2.c"
+#line 774 "edicion2.c"
 
 #define INITIAL 0
 
@@ -972,10 +988,10 @@ YY_DECL
 		}
 
 	{
-#line 161 "edicion2.l"
+#line 179 "edicion2.l"
 
 
-#line 978 "edicion2.c"
+#line 994 "edicion2.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1035,17 +1051,17 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 163 "edicion2.l"
+#line 181 "edicion2.l"
 { contador_lineas++; contador_caracteres += yyleng; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 164 "edicion2.l"
+#line 182 "edicion2.l"
 { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 166 "edicion2.l"
+#line 184 "edicion2.l"
 {
     registrar_pr(yytext);
     contador_caracteres += yyleng;
@@ -1053,7 +1069,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 171 "edicion2.l"
+#line 189 "edicion2.l"
 {
     contador_operadores++;
     contador_caracteres += yyleng;
@@ -1061,14 +1077,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 177 "edicion2.l"
+#line 195 "edicion2.l"
 {
     contador_caracteres += yyleng;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 181 "edicion2.l"
+#line 199 "edicion2.l"
 { 
     contador_ids++; 
     contador_caracteres += yyleng;
@@ -1076,45 +1092,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 186 "edicion2.l"
+#line 204 "edicion2.l"
 { 
     contador_enteros++; 
     contador_caracteres += yyleng;
 
-    strcpy(RegTok[c_tok].lexema, yytext);
-    RegTok[c_tok].tipo=TOKEN_ENTERO;
-    RegTok[c_tok].linea=contador_lineas;
-    c_tok++;
+    registrar_token(TOKEN_ENTERO);
     c_int++;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 197 "edicion2.l"
+#line 212 "edicion2.l"
 { 
     contador_float++; 
     contador_caracteres += yyleng;
 
-    strcpy(RegTok[c_tok].lexema, yytext);
-    RegTok[c_tok].tipo=TOKEN_FLOTANTE;
-    RegTok[c_tok].linea=contador_lineas;
-    c_tok++;
+    registrar_token(TOKEN_FLOTANTE);
     c_float++;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 208 "edicion2.l"
+#line 220 "edicion2.l"
 { 
     contador_caracteres += yyleng; 
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 212 "edicion2.l"
+#line 224 "edicion2.l"
 ECHO;
 	YY_BREAK
-#line 1117 "edicion2.c"
+#line 1127 "edicion2.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2119,7 +2129,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 212 "edicion2.l"
+#line 224 "edicion2.l"
 
 
 int yywrap() { return 1; }

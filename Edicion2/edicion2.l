@@ -21,13 +21,19 @@ typedef struct {
 } Token;
 
 
+
+//esta es una funcion para registrar tokens y no andar repitiendo el bloque de codigo
+
+
 //defino mis propios contadores de cosas para no romper los de sebastian
 int c_int=0;
 int c_float=0;
 int c_ident=0;
 int c_tok=0;
 
+
 Token RegTok[200];
+
 
 // Definicion de Tokens
 #define ID 1
@@ -149,7 +155,19 @@ int comparar_descendente(const void *a, const void *b) {
     InfoPalabra *p2 = (InfoPalabra *)b;
     return p2->conteo - p1->conteo; 
 }
+
+
+void registrar_token(TipoToken tipo) {
+    strcpy(RegTok[c_tok].lexema, yytext);
+    RegTok[c_tok].tipo = tipo;
+    RegTok[c_tok].linea = contador_lineas;
+    c_tok++;
+}
+
+
 %}
+
+
 
 DIGITO   [0-9]
 ENTERO   {DIGITO}+
@@ -187,10 +205,7 @@ WS       [ \t\r]+
     contador_enteros++; 
     contador_caracteres += yyleng;
 
-    strcpy(RegTok[c_tok].lexema, yytext);
-    RegTok[c_tok].tipo=TOKEN_ENTERO;
-    RegTok[c_tok].linea=contador_lineas;
-    c_tok++;
+    registrar_token(TOKEN_ENTERO);
     c_int++;
 }
 
@@ -198,10 +213,7 @@ WS       [ \t\r]+
     contador_float++; 
     contador_caracteres += yyleng;
 
-    strcpy(RegTok[c_tok].lexema, yytext);
-    RegTok[c_tok].tipo=TOKEN_FLOTANTE;
-    RegTok[c_tok].linea=contador_lineas;
-    c_tok++;
+    registrar_token(TOKEN_FLOTANTE);
     c_float++;
 }
 
