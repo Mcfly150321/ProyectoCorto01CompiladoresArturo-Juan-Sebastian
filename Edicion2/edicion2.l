@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 //debemos dividir en palabras reservadas, enteros, flotantes, identificadores, booleanos, operadores
-
+#define MAX_DICCIONARIO 100
 int nivel_llaves = 0; // 0 significa ámbito global
+bool es_declaracion = false; // Variable para indicar si estamos en una declaración de variable
 
 typedef enum {
     PR_NINGUNA = 0,
@@ -68,6 +69,15 @@ const char *nombres_pr[] = {
     "void", "volatile", "while", "as", "def",
     "in", "trait", "property", "it", "var"
 };
+
+// Estructura para asociar Nombre -> Ámbito
+typedef struct {
+    char nombre[50];
+    char ambito[10]; // Guardará "local" o "global"
+} VariableDiccionario;
+
+VariableDiccionario diccionario[MAX_DICCIONARIO];
+int contador_diccionario = 0; // Tu contadorlocales
 
 // Contadores propios
 int c_int = 0;
@@ -158,19 +168,60 @@ int contador_booleanos = 0;
 int contador_operadores = 0;
 int contador_ids = 0;
 
+// Functiones auxiliares para el diccionario
+char* buscar_en_diccionario(const char* nombre) {
+    for (int i = 0; i < contador_diccionario; i++) {
+        if (strcmp(diccionario[i].nombre, nombre) == 0) {
+            return diccionario[i].ambito;
+        }
+    }
+    return NULL;
+}
+
+void agregar_al_diccionario(const char* nombre, const char* ambito) {
+    for (int i = 0; i < contador_diccionario; i++) {
+        if (strcmp(diccionario[i].nombre, nombre) == 0) {
+            strcpy(diccionario[i].ambito, ambito);
+            return;
+        }
+    }
+    if (contador_diccionario < MAX_DICCIONARIO) {
+        strcpy(diccionario[contador_diccionario].nombre, nombre);
+        strcpy(diccionario[contador_diccionario].ambito, ambito);
+        contador_diccionario++;
+    }
+}
+
+// 2. Tu función registrar_token corregida
 void registrar_token(TipoToken tipo) {
     strcpy(RegTok[c_tok].lexema, yytext);
     RegTok[c_tok].tipo = tipo;
     RegTok[c_tok].linea = contador_lineas;
+
     if (tipo == TOKEN_IDENTIFICADOR)
     {
-        if (nivel_llaves == 0) {
-            strcpy(RegTok[c_tok].ambito, "global");
-        } else {
-            strcpy(RegTok[c_tok].ambito, "local");
-        }\
+        char* ambito_existente = buscar_en_diccionario(yytext);
+
+        if (es_declaracion) {
+            // Si trae palabra reservada, determina ámbito según las llaves
+            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
+            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
+            agregar_al_diccionario(yytext, nuevo_ambito);
+            es_declaracion = false; // Resetear bandera
+        } 
+        else if (ambito_existente != NULL) {
+            // Si ya existe en el diccionario, hereda el ámbito guardado
+            strcpy(RegTok[c_tok].ambito, ambito_existente);
+        } 
+        else {
+            // Si no fue declarada ni existía (uso directo)
+            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
+            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
+            agregar_al_diccionario(yytext, nuevo_ambito);
+        }
     }
-     c_tok++;
+
+    c_tok++;
 }
 
 void registrar_palabra_reservada(SubtipoReservada subtipo) {
@@ -215,33 +266,33 @@ WS       [ \t\r]+
 
 "abstract"      { registrar_palabra_reservada(PR_ABSTRACT); }
 "assert"        { registrar_palabra_reservada(PR_ASSERT); }
-"boolean"       { registrar_palabra_reservada(PR_BOOLEAN); }
+"boolean"       { registrar_palabra_reservada(PR_BOOLEAN); es_declaracion = true; }
 "break"         { registrar_palabra_reservada(PR_BREAK); }
-"byte"          { registrar_palabra_reservada(PR_BYTE); }
+"byte"          { registrar_palabra_reservada(PR_BYTE); es_declaracion = true; }
 "case"          { registrar_palabra_reservada(PR_CASE); }
 "catch"         { registrar_palabra_reservada(PR_CATCH); }
-"char"          { registrar_palabra_reservada(PR_CHAR); }
+"char"          { registrar_palabra_reservada(PR_CHAR); es_declaracion = true; }
 "class"         { registrar_palabra_reservada(PR_CLASS); }
 "const"         { registrar_palabra_reservada(PR_CONST); }
 "continue"      { registrar_palabra_reservada(PR_CONTINUE); }
 "default"       { registrar_palabra_reservada(PR_DEFAULT); }
 "do"            { registrar_palabra_reservada(PR_DO); }
-"double"        { registrar_palabra_reservada(PR_DOUBLE); }
+"double"        { registrar_palabra_reservada(PR_DOUBLE); es_declaracion = true; }
 "else"          { registrar_palabra_reservada(PR_ELSE); }
 "enum"          { registrar_palabra_reservada(PR_ENUM); }
 "extends"       { registrar_palabra_reservada(PR_EXTENDS); }
 "final"         { registrar_palabra_reservada(PR_FINAL); }
 "finally"       { registrar_palabra_reservada(PR_FINALLY); }
-"float"         { registrar_palabra_reservada(PR_FLOAT); }
+"float"         { registrar_palabra_reservada(PR_FLOAT); es_declaracion = true; }
 "for"           { registrar_palabra_reservada(PR_FOR); }
 "goto"          { registrar_palabra_reservada(PR_GOTO); }
 "if"            { registrar_palabra_reservada(PR_IF); }
 "implements"    { registrar_palabra_reservada(PR_IMPLEMENTS); }
 "import"        { registrar_palabra_reservada(PR_IMPORT); }
 "instanceof"    { registrar_palabra_reservada(PR_INSTANCEOF); }
-"int"           { registrar_palabra_reservada(PR_INT); }
+"int"           { registrar_palabra_reservada(PR_INT); es_declaracion = true; }
 "interface"     { registrar_palabra_reservada(PR_INTERFACE); }
-"long"          { registrar_palabra_reservada(PR_LONG); }
+"long"          { registrar_palabra_reservada(PR_LONG); es_declaracion = true; }
 "native"        { registrar_palabra_reservada(PR_NATIVE); }
 "new"           { registrar_palabra_reservada(PR_NEW); }
 "null"          { registrar_palabra_reservada(PR_NULL); }
@@ -250,7 +301,7 @@ WS       [ \t\r]+
 "protected"     { registrar_palabra_reservada(PR_PROTECTED); }
 "public"        { registrar_palabra_reservada(PR_PUBLIC); }
 "return"        { registrar_palabra_reservada(PR_RETURN); }
-"short"         { registrar_palabra_reservada(PR_SHORT); }
+"short"         { registrar_palabra_reservada(PR_SHORT); es_declaracion = true; }
 "static"        { registrar_palabra_reservada(PR_STATIC); }
 "strictfp"      { registrar_palabra_reservada(PR_STRICTFP); }
 "super"         { registrar_palabra_reservada(PR_SUPER); }
@@ -261,16 +312,16 @@ WS       [ \t\r]+
 "throws"        { registrar_palabra_reservada(PR_THROWS); }
 "transient"     { registrar_palabra_reservada(PR_TRANSIENT); }
 "try"           { registrar_palabra_reservada(PR_TRY); }
-"void"          { registrar_palabra_reservada(PR_VOID); }
+"void"          { registrar_palabra_reservada(PR_VOID); es_declaracion = true; }
 "volatile"      { registrar_palabra_reservada(PR_VOLATILE); }
 "while"         { registrar_palabra_reservada(PR_WHILE); }
 "as"            { registrar_palabra_reservada(PR_AS); }
-"def"           { registrar_palabra_reservada(PR_DEF); }
+"def"           { registrar_palabra_reservada(PR_DEF); es_declaracion = true; }
 "in"            { registrar_palabra_reservada(PR_IN); }
 "trait"         { registrar_palabra_reservada(PR_TRAIT); }
 "property"      { registrar_palabra_reservada(PR_PROPERTY); }
 "it"            { registrar_palabra_reservada(PR_IT); }
-"var"           { registrar_palabra_reservada(PR_VAR); }
+"var"           { registrar_palabra_reservada(PR_VAR); es_declaracion = true; }
 
 
 

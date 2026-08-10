@@ -623,8 +623,9 @@ char *yytext;
 #include <stdlib.h>
 #include <string.h>
 //debemos dividir en palabras reservadas, enteros, flotantes, identificadores, booleanos, operadores
-
+#define MAX_DICCIONARIO 100
 int nivel_llaves = 0; // 0 significa ámbito global
+bool es_declaracion = false; // Variable para indicar si estamos en una declaración de variable
 
 typedef enum {
     PR_NINGUNA = 0,
@@ -688,6 +689,15 @@ const char *nombres_pr[] = {
     "void", "volatile", "while", "as", "def",
     "in", "trait", "property", "it", "var"
 };
+
+// Estructura para asociar Nombre -> Ámbito
+typedef struct {
+    char nombre[50];
+    char ambito[10]; // Guardará "local" o "global"
+} VariableDiccionario;
+
+VariableDiccionario diccionario[MAX_DICCIONARIO];
+int contador_diccionario = 0; // Tu contadorlocales
 
 // Contadores propios
 int c_int = 0;
@@ -778,19 +788,60 @@ int contador_booleanos = 0;
 int contador_operadores = 0;
 int contador_ids = 0;
 
+// Functiones auxiliares para el diccionario
+char* buscar_en_diccionario(const char* nombre) {
+    for (int i = 0; i < contador_diccionario; i++) {
+        if (strcmp(diccionario[i].nombre, nombre) == 0) {
+            return diccionario[i].ambito;
+        }
+    }
+    return NULL;
+}
+
+void agregar_al_diccionario(const char* nombre, const char* ambito) {
+    for (int i = 0; i < contador_diccionario; i++) {
+        if (strcmp(diccionario[i].nombre, nombre) == 0) {
+            strcpy(diccionario[i].ambito, ambito);
+            return;
+        }
+    }
+    if (contador_diccionario < MAX_DICCIONARIO) {
+        strcpy(diccionario[contador_diccionario].nombre, nombre);
+        strcpy(diccionario[contador_diccionario].ambito, ambito);
+        contador_diccionario++;
+    }
+}
+
+// 2. Tu función registrar_token corregida
 void registrar_token(TipoToken tipo) {
     strcpy(RegTok[c_tok].lexema, yytext);
     RegTok[c_tok].tipo = tipo;
     RegTok[c_tok].linea = contador_lineas;
+
     if (tipo == TOKEN_IDENTIFICADOR)
     {
-        if (nivel_llaves == 0) {
-            strcpy(RegTok[c_tok].ambito, "global");
-        } else {
-            strcpy(RegTok[c_tok].ambito, "local");
-        }\
+        char* ambito_existente = buscar_en_diccionario(yytext);
+
+        if (es_declaracion) {
+            // Si trae palabra reservada, determina ámbito según las llaves
+            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
+            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
+            agregar_al_diccionario(yytext, nuevo_ambito);
+            es_declaracion = false; // Resetear bandera
+        } 
+        else if (ambito_existente != NULL) {
+            // Si ya existe en el diccionario, hereda el ámbito guardado
+            strcpy(RegTok[c_tok].ambito, ambito_existente);
+        } 
+        else {
+            // Si no fue declarada ni existía (uso directo)
+            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
+            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
+            agregar_al_diccionario(yytext, nuevo_ambito);
+        }
     }
-     c_tok++;
+
+    c_tok++;
 }
 
 void registrar_palabra_reservada(SubtipoReservada subtipo) {
@@ -817,8 +868,8 @@ int comparar_descendente(const void *a, const void *b) {
     return p2->conteo - p1->conteo;
 }
 
-#line 820 "edicion2.c"
-#line 821 "edicion2.c"
+#line 871 "edicion2.c"
+#line 872 "edicion2.c"
 
 #define INITIAL 0
 
@@ -1035,10 +1086,10 @@ YY_DECL
 		}
 
 	{
-#line 211 "edicion2.l"
+#line 262 "edicion2.l"
 
 
-#line 1041 "edicion2.c"
+#line 1092 "edicion2.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1098,307 +1149,307 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 213 "edicion2.l"
+#line 264 "edicion2.l"
 { contador_lineas++; contador_caracteres += yyleng; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 214 "edicion2.l"
+#line 265 "edicion2.l"
 { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 216 "edicion2.l"
+#line 267 "edicion2.l"
 { registrar_palabra_reservada(PR_ABSTRACT); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 217 "edicion2.l"
+#line 268 "edicion2.l"
 { registrar_palabra_reservada(PR_ASSERT); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 218 "edicion2.l"
-{ registrar_palabra_reservada(PR_BOOLEAN); }
+#line 269 "edicion2.l"
+{ registrar_palabra_reservada(PR_BOOLEAN); es_declaracion = true; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 219 "edicion2.l"
+#line 270 "edicion2.l"
 { registrar_palabra_reservada(PR_BREAK); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 220 "edicion2.l"
-{ registrar_palabra_reservada(PR_BYTE); }
+#line 271 "edicion2.l"
+{ registrar_palabra_reservada(PR_BYTE); es_declaracion = true; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 221 "edicion2.l"
+#line 272 "edicion2.l"
 { registrar_palabra_reservada(PR_CASE); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 222 "edicion2.l"
+#line 273 "edicion2.l"
 { registrar_palabra_reservada(PR_CATCH); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 223 "edicion2.l"
-{ registrar_palabra_reservada(PR_CHAR); }
+#line 274 "edicion2.l"
+{ registrar_palabra_reservada(PR_CHAR); es_declaracion = true; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 224 "edicion2.l"
+#line 275 "edicion2.l"
 { registrar_palabra_reservada(PR_CLASS); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 225 "edicion2.l"
+#line 276 "edicion2.l"
 { registrar_palabra_reservada(PR_CONST); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 226 "edicion2.l"
+#line 277 "edicion2.l"
 { registrar_palabra_reservada(PR_CONTINUE); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 227 "edicion2.l"
+#line 278 "edicion2.l"
 { registrar_palabra_reservada(PR_DEFAULT); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 228 "edicion2.l"
+#line 279 "edicion2.l"
 { registrar_palabra_reservada(PR_DO); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 229 "edicion2.l"
-{ registrar_palabra_reservada(PR_DOUBLE); }
+#line 280 "edicion2.l"
+{ registrar_palabra_reservada(PR_DOUBLE); es_declaracion = true; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 230 "edicion2.l"
+#line 281 "edicion2.l"
 { registrar_palabra_reservada(PR_ELSE); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 231 "edicion2.l"
+#line 282 "edicion2.l"
 { registrar_palabra_reservada(PR_ENUM); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 232 "edicion2.l"
+#line 283 "edicion2.l"
 { registrar_palabra_reservada(PR_EXTENDS); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 233 "edicion2.l"
+#line 284 "edicion2.l"
 { registrar_palabra_reservada(PR_FINAL); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 234 "edicion2.l"
+#line 285 "edicion2.l"
 { registrar_palabra_reservada(PR_FINALLY); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 235 "edicion2.l"
-{ registrar_palabra_reservada(PR_FLOAT); }
+#line 286 "edicion2.l"
+{ registrar_palabra_reservada(PR_FLOAT); es_declaracion = true; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 236 "edicion2.l"
+#line 287 "edicion2.l"
 { registrar_palabra_reservada(PR_FOR); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 237 "edicion2.l"
+#line 288 "edicion2.l"
 { registrar_palabra_reservada(PR_GOTO); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 238 "edicion2.l"
+#line 289 "edicion2.l"
 { registrar_palabra_reservada(PR_IF); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 239 "edicion2.l"
+#line 290 "edicion2.l"
 { registrar_palabra_reservada(PR_IMPLEMENTS); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 240 "edicion2.l"
+#line 291 "edicion2.l"
 { registrar_palabra_reservada(PR_IMPORT); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 241 "edicion2.l"
+#line 292 "edicion2.l"
 { registrar_palabra_reservada(PR_INSTANCEOF); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 242 "edicion2.l"
-{ registrar_palabra_reservada(PR_INT); }
+#line 293 "edicion2.l"
+{ registrar_palabra_reservada(PR_INT); es_declaracion = true; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 243 "edicion2.l"
+#line 294 "edicion2.l"
 { registrar_palabra_reservada(PR_INTERFACE); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 244 "edicion2.l"
-{ registrar_palabra_reservada(PR_LONG); }
+#line 295 "edicion2.l"
+{ registrar_palabra_reservada(PR_LONG); es_declaracion = true; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 245 "edicion2.l"
+#line 296 "edicion2.l"
 { registrar_palabra_reservada(PR_NATIVE); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 246 "edicion2.l"
+#line 297 "edicion2.l"
 { registrar_palabra_reservada(PR_NEW); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 247 "edicion2.l"
+#line 298 "edicion2.l"
 { registrar_palabra_reservada(PR_NULL); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 248 "edicion2.l"
+#line 299 "edicion2.l"
 { registrar_palabra_reservada(PR_PACKAGE); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 249 "edicion2.l"
+#line 300 "edicion2.l"
 { registrar_palabra_reservada(PR_PRIVATE); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 250 "edicion2.l"
+#line 301 "edicion2.l"
 { registrar_palabra_reservada(PR_PROTECTED); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 251 "edicion2.l"
+#line 302 "edicion2.l"
 { registrar_palabra_reservada(PR_PUBLIC); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 252 "edicion2.l"
+#line 303 "edicion2.l"
 { registrar_palabra_reservada(PR_RETURN); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 253 "edicion2.l"
-{ registrar_palabra_reservada(PR_SHORT); }
+#line 304 "edicion2.l"
+{ registrar_palabra_reservada(PR_SHORT); es_declaracion = true; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 254 "edicion2.l"
+#line 305 "edicion2.l"
 { registrar_palabra_reservada(PR_STATIC); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 255 "edicion2.l"
+#line 306 "edicion2.l"
 { registrar_palabra_reservada(PR_STRICTFP); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 256 "edicion2.l"
+#line 307 "edicion2.l"
 { registrar_palabra_reservada(PR_SUPER); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 257 "edicion2.l"
+#line 308 "edicion2.l"
 { registrar_palabra_reservada(PR_SWITCH); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 258 "edicion2.l"
+#line 309 "edicion2.l"
 { registrar_palabra_reservada(PR_SYNCHRONIZED); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 259 "edicion2.l"
+#line 310 "edicion2.l"
 { registrar_palabra_reservada(PR_THIS); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 260 "edicion2.l"
+#line 311 "edicion2.l"
 { registrar_palabra_reservada(PR_THROW); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 261 "edicion2.l"
+#line 312 "edicion2.l"
 { registrar_palabra_reservada(PR_THROWS); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 262 "edicion2.l"
+#line 313 "edicion2.l"
 { registrar_palabra_reservada(PR_TRANSIENT); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 263 "edicion2.l"
+#line 314 "edicion2.l"
 { registrar_palabra_reservada(PR_TRY); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 264 "edicion2.l"
-{ registrar_palabra_reservada(PR_VOID); }
+#line 315 "edicion2.l"
+{ registrar_palabra_reservada(PR_VOID); es_declaracion = true; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 265 "edicion2.l"
+#line 316 "edicion2.l"
 { registrar_palabra_reservada(PR_VOLATILE); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 266 "edicion2.l"
+#line 317 "edicion2.l"
 { registrar_palabra_reservada(PR_WHILE); }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 267 "edicion2.l"
+#line 318 "edicion2.l"
 { registrar_palabra_reservada(PR_AS); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 268 "edicion2.l"
-{ registrar_palabra_reservada(PR_DEF); }
+#line 319 "edicion2.l"
+{ registrar_palabra_reservada(PR_DEF); es_declaracion = true; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 269 "edicion2.l"
+#line 320 "edicion2.l"
 { registrar_palabra_reservada(PR_IN); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 270 "edicion2.l"
+#line 321 "edicion2.l"
 { registrar_palabra_reservada(PR_TRAIT); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 271 "edicion2.l"
+#line 322 "edicion2.l"
 { registrar_palabra_reservada(PR_PROPERTY); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 272 "edicion2.l"
+#line 323 "edicion2.l"
 { registrar_palabra_reservada(PR_IT); }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 273 "edicion2.l"
-{ registrar_palabra_reservada(PR_VAR); }
+#line 324 "edicion2.l"
+{ registrar_palabra_reservada(PR_VAR); es_declaracion = true; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 277 "edicion2.l"
+#line 328 "edicion2.l"
 {
     contador_caracteres += yyleng;
     registrar_token(TOKEN_BOOLEANO);
@@ -1407,14 +1458,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 282 "edicion2.l"
+#line 333 "edicion2.l"
 {
   // los comentarios no se cuentan como operadores
 }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 286 "edicion2.l"
+#line 337 "edicion2.l"
 {
     contador_operadores++;
     contador_caracteres += yyleng;
@@ -1424,14 +1475,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 293 "edicion2.l"
+#line 344 "edicion2.l"
 {
     contador_caracteres += yyleng;
 }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 297 "edicion2.l"
+#line 348 "edicion2.l"
 {
         contador_caracteres += yyleng;
         nivel_llaves++;
@@ -1439,7 +1490,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 302 "edicion2.l"
+#line 353 "edicion2.l"
 {
         contador_caracteres += yyleng;
         nivel_llaves--;
@@ -1447,7 +1498,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 308 "edicion2.l"
+#line 359 "edicion2.l"
 { 
     contador_ids++; 
     contador_caracteres += yyleng;
@@ -1457,7 +1508,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 315 "edicion2.l"
+#line 366 "edicion2.l"
 { 
     contador_enteros++; 
     contador_caracteres += yyleng;
@@ -1468,7 +1519,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 323 "edicion2.l"
+#line 374 "edicion2.l"
 { 
     contador_float++; 
     contador_caracteres += yyleng;
@@ -1479,17 +1530,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 331 "edicion2.l"
+#line 382 "edicion2.l"
 { 
     contador_caracteres += yyleng; 
 }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 335 "edicion2.l"
+#line 386 "edicion2.l"
 ECHO;
 	YY_BREAK
-#line 1492 "edicion2.c"
+#line 1543 "edicion2.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2494,7 +2545,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 335 "edicion2.l"
+#line 386 "edicion2.l"
 
 
 int yywrap() { return 1; }
@@ -2563,7 +2614,6 @@ printf("--- Conteo de Enteros ---\n");
     printf("Cantidad de identificadores encontrados: %d\n", c_ids);
     printf("Cantidad de valores booleanos: %d\n", c_bool);
     printf("Cantidad de operadores encontrados: %d\n", c_ope);
-    printf("Cantidad de comentarios encontrados: %d\n", c_comentarios);
     printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
     printf("Total general de tokens: %d\n", c_tok);
        return 0;
