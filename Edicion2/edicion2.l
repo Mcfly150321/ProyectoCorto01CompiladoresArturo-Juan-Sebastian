@@ -4,6 +4,24 @@
 #include <string.h>
 //debemos dividir en palabras reservadas, enteros, flotantes, identificadores, booleanos, operadores
 
+int nivel_llaves = 0; // 0 significa ámbito global
+
+typedef enum {
+    PR_NINGUNA = 0,
+    PR_ABSTRACT, PR_ASSERT, PR_BOOLEAN, PR_BREAK, PR_BYTE,
+    PR_CASE, PR_CATCH, PR_CHAR, PR_CLASS, PR_CONST,
+    PR_CONTINUE, PR_DEFAULT, PR_DO, PR_DOUBLE, PR_ELSE,
+    PR_ENUM, PR_EXTENDS, PR_FALSE, PR_FINAL, PR_FINALLY,
+    PR_FLOAT, PR_FOR, PR_GOTO, PR_IF, PR_IMPLEMENTS,
+    PR_IMPORT, PR_INSTANCEOF, PR_INT, PR_INTERFACE, PR_LONG,
+    PR_NATIVE, PR_NEW, PR_NULL, PR_PACKAGE, PR_PRIVATE,
+    PR_PROTECTED, PR_PUBLIC, PR_RETURN, PR_SHORT, PR_STATIC,
+    PR_STRICTFP, PR_SUPER, PR_SWITCH, PR_SYNCHRONIZED, PR_THIS,
+    PR_THROW, PR_THROWS, PR_TRANSIENT, PR_TRY, PR_TRUE,
+    PR_VOID, PR_VOLATILE, PR_WHILE, PR_AS, PR_DEF,
+    PR_IN, PR_TRAIT, PR_PROPERTY, PR_IT, PR_VAR,
+    TOTAL_PALABRAS_RESERVADAS
+} SubtipoReservada;
 
 typedef enum {
     TOKEN_ENTERO,
@@ -11,39 +29,62 @@ typedef enum {
     TOKEN_IDENTIFICADOR,
     TOKEN_BOOLEANO,
     TOKEN_OPERADOR,
-    TOKEN_RESERVADA,
-    TOKEN_COMENTARIO
+    TOKEN_RESERVADA
 } TipoToken;
 
+const char *nombres_tipos_token[] = {
+    "TOKEN_ENTERO",
+    "TOKEN_FLOTANTE",
+    "TOKEN_IDENTIFICADOR",
+    "TOKEN_BOOLEANO",
+    "TOKEN_OPERADOR",
+    "TOKEN_RESERVADA"
+};
+
 typedef struct {
-    char lexema[64];  // esto es para registrar qie texto se encontro, por ejemplo: "true", "x", "10.5"
-    TipoToken tipo;   // para saber qué tipo de variable es
-    int linea;        // para guardar en que linea del cogigo aparecio
+    char lexema[64];  // texto encontrado, por ejemplo: "true", "x", "10.5"
+    TipoToken tipo;   // qué tipo de token es
+    SubtipoReservada subtipo_pr; // qué palabra reservada es, si aplica
+    char ambito[20]; // ámbito en el que se encuentra (global, clase, método, etc.)
+    int linea;        // en qué linea del codigo aparecio
 } Token;
 
+// Arreglo para llevar la cuenta de cada palabra reservada
+int conteo_pr[TOTAL_PALABRAS_RESERVADAS] = {0};
 
+// Nombres de las palabras reservadas en el mismo orden que el enum (sin contar PR_NINGUNA)
+const char *nombres_pr[] = {
+    "", // Posición 0 coincide con PR_NINGUNA
+    "abstract", "assert", "boolean", "break", "byte",
+    "case", "catch", "char", "class", "const",
+    "continue", "default", "do", "double", "else",
+    "enum", "extends", "false", "final", "finally",
+    "float", "for", "goto", "if", "implements",
+    "import", "instanceof", "int", "interface", "long",
+    "native", "new", "null", "package", "private",
+    "protected", "public", "return", "short", "static",
+    "strictfp", "super", "switch", "synchronized", "this",
+    "throw", "throws", "transient", "try", "true",
+    "void", "volatile", "while", "as", "def",
+    "in", "trait", "property", "it", "var"
+};
 
-//esta es una funcion para registrar tokens y no andar repitiendo el bloque de codigo
+// Contadores propios
+int c_int = 0;
+int c_float = 0;
+int c_ids = 0;
+int c_bool = 0;
+int c_ope = 0;
+int c_res = 0;
+int c_comentarios = 0;
+int c_tok = 0;
 
-
-//defino mis propios contadores de cosas para no romper los de sebastian
-int c_int=0;
-int c_float=0;
-int c_ids=0;
-int c_bool=0;
-int c_ope=0;
-int c_res=0;
-int c_comentarios=0;
-int c_tok=0;
-
-
-Token RegTok[200];
-
+Token RegTok[2000];
 
 // Definicion de Tokens
 #define ID 1
 
-// Palabras Reservadas (Indices para nuestro arreglo de conteo)
+// Palabras Reservadas (indices para el arreglo de conteo)
 #define PR_ABSTRACT 2
 #define PR_ASSERT 3
 #define PR_BOOLEAN 4
@@ -107,30 +148,6 @@ Token RegTok[200];
 
 // Operadores y otros tokens (del 62 en adelante)
 #define OP_ASIG_SL 62
-// ... (puedes mantener tus defines de operadores igual)
-
-// Estructura para llevar el conteo de palabras reservadas
-typedef struct {
-    const char *nombre;
-    int conteo;
-} InfoPalabra;
-
-// Tabla con todas las palabras reservadas que buscas
-InfoPalabra tabla_pr[] = {
-    {"abstract", 0}, {"assert", 0}, {"boolean", 0}, {"break", 0}, {"byte", 0},
-    {"case", 0}, {"catch", 0}, {"char", 0}, {"class", 0}, {"const", 0},
-    {"continue", 0}, {"default", 0}, {"do", 0}, {"double", 0}, {"else", 0},
-    {"enum", 0}, {"extends", 0}, {"false", 0}, {"final", 0}, {"finally", 0},
-    {"float", 0}, {"for", 0}, {"goto", 0}, {"if", 0}, {"implements", 0},
-    {"import", 0}, {"instanceof", 0}, {"int", 0}, {"interface", 0}, {"long", 0},
-    {"native", 0}, {"new", 0}, {"null", 0}, {"package", 0}, {"private", 0},
-    {"protected", 0}, {"public", 0}, {"return", 0}, {"short", 0}, {"static", 0},
-    {"strictfp", 0}, {"super", 0}, {"switch", 0}, {"synchronized", 0}, {"this", 0},
-    {"throw", 0}, {"throws", 0}, {"transient", 0}, {"try", 0}, {"true", 0},
-    {"void", 0}, {"volatile", 0}, {"while", 0}, {"as", 0}, {"def", 0},
-    {"in", 0}, {"trait", 0}, {"property", 0}, {"it", 0}, {"var", 0}
-};
-int total_pr_registradas = 60;
 
 // Variables globales para el reporte
 int contador_lineas = 1;
@@ -141,34 +158,44 @@ int contador_booleanos = 0;
 int contador_operadores = 0;
 int contador_ids = 0;
 
-// Función auxiliar para sumarizar la palabra reservada encontrada
-void registrar_pr(const char *palabra) {
-    for (int i = 0; i < total_pr_registradas; i++) {
-        if (strcmp(tabla_pr[i].nombre, palabra) == 0) {
-            tabla_pr[i].conteo++;
-            if (strcmp(palabra, "boolean") == 0 || strcmp(palabra, "true") == 0 || strcmp(palabra, "false") == 0) {
-                contador_booleanos++;
-            }
-            break;
-        }
-    }
-}
-
-// Función de comparación para ordenar de forma descendente (de mayor a menor)
-int comparar_descendente(const void *a, const void *b) {
-    InfoPalabra *p1 = (InfoPalabra *)a;
-    InfoPalabra *p2 = (InfoPalabra *)b;
-    return p2->conteo - p1->conteo; 
-}
-
-
 void registrar_token(TipoToken tipo) {
     strcpy(RegTok[c_tok].lexema, yytext);
     RegTok[c_tok].tipo = tipo;
     RegTok[c_tok].linea = contador_lineas;
-    c_tok++;
+    if (tipo == TOKEN_IDENTIFICADOR)
+    {
+        if (nivel_llaves == 0) {
+            strcpy(RegTok[c_tok].ambito, "global");
+        } else {
+            strcpy(RegTok[c_tok].ambito, "local");
+        }\
+    }
+     c_tok++;
 }
 
+void registrar_palabra_reservada(SubtipoReservada subtipo) {
+    strcpy(RegTok[c_tok].lexema, yytext);
+    RegTok[c_tok].tipo = TOKEN_RESERVADA;
+    RegTok[c_tok].subtipo_pr = subtipo;
+    RegTok[c_tok].linea = contador_lineas;
+    c_tok++;
+    c_res++;
+    // Suma 1 a la cuenta individual de esta palabra
+    conteo_pr[subtipo]++;
+}
+
+// Estructura para ordenar palabras reservadas por frecuencia
+typedef struct {
+    char palabra[50];
+    int conteo;
+} InfoPalabra;
+
+// Funcion de comparacion para qsort (orden descendente)
+int comparar_descendente(const void *a, const void *b) {
+    InfoPalabra *p1 = (InfoPalabra *)a;
+    InfoPalabra *p2 = (InfoPalabra *)b;
+    return p2->conteo - p1->conteo;
+}
 
 %}
 
@@ -186,11 +213,66 @@ WS       [ \t\r]+
 \n              { contador_lineas++; contador_caracteres += yyleng; }
 {WS}            { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 
-("abstract"|"assert"|"boolean"|"break"|"byte"|"case"|"catch"|"char"|"class"|"const"|"continue"|"default"|"do"|"double"|"else"|"enum"|"extends"|"final"|"finally"|"float"|"for"|"goto"|"if"|"implements"|"import"|"instanceof"|"int"|"interface"|"long"|"native"|"new"|"null"|"package"|"private"|"protected"|"public"|"return"|"short"|"static"|"strictfp"|"super"|"switch"|"synchronized"|"this"|"throw"|"throws"|"transient"|"try"|"void"|"volatile"|"while"|"as"|"def"|"in"|"trait"|"property"|"it"|"var") {
-    contador_caracteres += yyleng;
-    registrar_token(TOKEN_RESERVADA);
-    c_res++;
-}
+"abstract"      { registrar_palabra_reservada(PR_ABSTRACT); }
+"assert"        { registrar_palabra_reservada(PR_ASSERT); }
+"boolean"       { registrar_palabra_reservada(PR_BOOLEAN); }
+"break"         { registrar_palabra_reservada(PR_BREAK); }
+"byte"          { registrar_palabra_reservada(PR_BYTE); }
+"case"          { registrar_palabra_reservada(PR_CASE); }
+"catch"         { registrar_palabra_reservada(PR_CATCH); }
+"char"          { registrar_palabra_reservada(PR_CHAR); }
+"class"         { registrar_palabra_reservada(PR_CLASS); }
+"const"         { registrar_palabra_reservada(PR_CONST); }
+"continue"      { registrar_palabra_reservada(PR_CONTINUE); }
+"default"       { registrar_palabra_reservada(PR_DEFAULT); }
+"do"            { registrar_palabra_reservada(PR_DO); }
+"double"        { registrar_palabra_reservada(PR_DOUBLE); }
+"else"          { registrar_palabra_reservada(PR_ELSE); }
+"enum"          { registrar_palabra_reservada(PR_ENUM); }
+"extends"       { registrar_palabra_reservada(PR_EXTENDS); }
+"final"         { registrar_palabra_reservada(PR_FINAL); }
+"finally"       { registrar_palabra_reservada(PR_FINALLY); }
+"float"         { registrar_palabra_reservada(PR_FLOAT); }
+"for"           { registrar_palabra_reservada(PR_FOR); }
+"goto"          { registrar_palabra_reservada(PR_GOTO); }
+"if"            { registrar_palabra_reservada(PR_IF); }
+"implements"    { registrar_palabra_reservada(PR_IMPLEMENTS); }
+"import"        { registrar_palabra_reservada(PR_IMPORT); }
+"instanceof"    { registrar_palabra_reservada(PR_INSTANCEOF); }
+"int"           { registrar_palabra_reservada(PR_INT); }
+"interface"     { registrar_palabra_reservada(PR_INTERFACE); }
+"long"          { registrar_palabra_reservada(PR_LONG); }
+"native"        { registrar_palabra_reservada(PR_NATIVE); }
+"new"           { registrar_palabra_reservada(PR_NEW); }
+"null"          { registrar_palabra_reservada(PR_NULL); }
+"package"       { registrar_palabra_reservada(PR_PACKAGE); }
+"private"       { registrar_palabra_reservada(PR_PRIVATE); }
+"protected"     { registrar_palabra_reservada(PR_PROTECTED); }
+"public"        { registrar_palabra_reservada(PR_PUBLIC); }
+"return"        { registrar_palabra_reservada(PR_RETURN); }
+"short"         { registrar_palabra_reservada(PR_SHORT); }
+"static"        { registrar_palabra_reservada(PR_STATIC); }
+"strictfp"      { registrar_palabra_reservada(PR_STRICTFP); }
+"super"         { registrar_palabra_reservada(PR_SUPER); }
+"switch"        { registrar_palabra_reservada(PR_SWITCH); }
+"synchronized"  { registrar_palabra_reservada(PR_SYNCHRONIZED); }
+"this"          { registrar_palabra_reservada(PR_THIS); }
+"throw"         { registrar_palabra_reservada(PR_THROW); }
+"throws"        { registrar_palabra_reservada(PR_THROWS); }
+"transient"     { registrar_palabra_reservada(PR_TRANSIENT); }
+"try"           { registrar_palabra_reservada(PR_TRY); }
+"void"          { registrar_palabra_reservada(PR_VOID); }
+"volatile"      { registrar_palabra_reservada(PR_VOLATILE); }
+"while"         { registrar_palabra_reservada(PR_WHILE); }
+"as"            { registrar_palabra_reservada(PR_AS); }
+"def"           { registrar_palabra_reservada(PR_DEF); }
+"in"            { registrar_palabra_reservada(PR_IN); }
+"trait"         { registrar_palabra_reservada(PR_TRAIT); }
+"property"      { registrar_palabra_reservada(PR_PROPERTY); }
+"it"            { registrar_palabra_reservada(PR_IT); }
+"var"           { registrar_palabra_reservada(PR_VAR); }
+
+
 
 "true"|"false" {
     contador_caracteres += yyleng;
@@ -198,19 +280,30 @@ WS       [ \t\r]+
     c_bool++;
 }
 "//".* {
-  //aqui no hace nada, solo es para sacar a los comentarios de conteo de operadores
+  // los comentarios no se cuentan como operadores
 }
 
-"<<="|"ве="|"|>>="|"**="|"?."|"*."|"?*\""|"?:"|".."|'..<|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"\?" {
+"<<="|">>="|"**="|"?."|"?:"|".."|"..<"|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"?" {
     contador_operadores++;
     contador_caracteres += yyleng;
     registrar_token(TOKEN_OPERADOR);
     c_ope++;
 }
 
-[.,:;(){}\[\]] {
+[.,:;()\[\]] {
     contador_caracteres += yyleng;
 }
+
+"{" {
+        contador_caracteres += yyleng;
+        nivel_llaves++;
+    }
+
+"}" {
+        contador_caracteres += yyleng;
+        nivel_llaves--;
+    }
+    
 
 {ID}            { 
     contador_ids++; 
@@ -245,61 +338,69 @@ int yywrap() { return 1; }
 
 int main() {
     yylex();
-
-
 printf("--- Conteo de Enteros ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_ENTERO) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_ENTERO) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
     }
-}
 
-printf("\n--- Conteo de Flotantes ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_FLOTANTE) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    printf("\n--- Conteo de Flotantes ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_FLOTANTE) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
     }
-}
 
-printf("\n--- Conteo de Identificadores ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_IDENTIFICADOR) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    printf("\n--- Conteo de Identificadores ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_IDENTIFICADOR) {
+            printf("Lexema: %s | Linea: %d | Token: %s | Ambito: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].ambito);
+        }
     }
-}
 
-printf("\n--- Conteo de Booleanos ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_BOOLEANO) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    printf("\n--- Conteo de Booleanos ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_BOOLEANO) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
     }
-}
 
-printf("\n--- Conteo de Operadores ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_OPERADOR) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    printf("\n--- Conteo de Operadores ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_OPERADOR) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
     }
-}
 
-printf("\n--- Conteo de Palabras Reservadas ---\n");
-for (int i = 0; i < c_tok; i++) {
-    if (RegTok[i].tipo == TOKEN_RESERVADA) {
-        printf("Lexema: %s | Linea: %d\n", RegTok[i].lexema, RegTok[i].linea);
+    // --- Filtrar, ordenar e imprimir palabras reservadas ---
+    InfoPalabra lista_pr[TOTAL_PALABRAS_RESERVADAS];
+    int total_unicas = 0;
+
+    for (int i = 1; i < TOTAL_PALABRAS_RESERVADAS; i++) {
+        if (conteo_pr[i] > 0) {
+            strcpy(lista_pr[total_unicas].palabra, nombres_pr[i - 1]);
+            lista_pr[total_unicas].conteo = conteo_pr[i];
+            total_unicas++;
+        }
     }
-}
 
-printf("\n--- Cantidades Totales ---\n");
-printf("Cantidad de líneas de código: %d\n", contador_lineas);
-printf("Cantidad de caracteres encontrados: %d\n", contador_caracteres);
-printf("Cantidad de números enteros encontrados: %d\n", c_int);
-printf("Cantidad de números flotantes encontrados: %d\n", c_float);
-printf("Cantidad de identificadores encontrados: %d\n", c_ids);
-printf("Cantidad de valores booleanos: %d\n", c_bool);
-printf("Cantidad de operadores encontrados: %d\n", c_ope);
-printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
-printf("Total general de tokens: %d\n", c_tok);
+    qsort(lista_pr, total_unicas, sizeof(InfoPalabra), comparar_descendente);
 
+    printf("\n--- Conteo de Palabras Reservadas (Orden Descendente) ---\n");
+    for (int i = 0; i < total_unicas; i++) {
+        printf("Palabra: %-12s | Apariciones: %d\n", lista_pr[i].palabra, lista_pr[i].conteo);
+    }
 
-    return 0;
+    printf("\n--- Cantidades Totales ---\n");
+    printf("Cantidad de lineas de codigo: %d\n", contador_lineas);
+    printf("Cantidad de caracteres encontrados: %d\n", contador_caracteres);
+    printf("Cantidad de numeros enteros encontrados: %d\n", c_int);
+    printf("Cantidad de numeros flotantes encontrados: %d\n", c_float);
+    printf("Cantidad de identificadores encontrados: %d\n", c_ids);
+    printf("Cantidad de valores booleanos: %d\n", c_bool);
+    printf("Cantidad de operadores encontrados: %d\n", c_ope);
+    printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
+    printf("Total general de tokens: %d\n", c_tok);
+       return 0;
 }
