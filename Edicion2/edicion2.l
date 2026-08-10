@@ -50,6 +50,15 @@ typedef struct {
     int linea;        // en qué linea del codigo aparecio
 } Token;
 
+
+
+typedef struct{
+    char codigo[100];
+    int linea;
+} ErrorR;
+
+ErrorR RegErr[1000];
+int c_err = 0;
 // Arreglo para llevar la cuenta de cada palabra reservada
 int conteo_pr[TOTAL_PALABRAS_RESERVADAS] = {0};
 
@@ -155,9 +164,10 @@ Token RegTok[2000];
 #define PR_PROPERTY 59
 #define PR_IT 60
 #define PR_VAR 61
+#define PR_STRING 62
 
 // Operadores y otros tokens (del 62 en adelante)
-#define OP_ASIG_SL 62
+#define OP_ASIG_SL 63
 
 // Variables globales para el reporte
 int contador_lineas = 1;
@@ -191,33 +201,42 @@ void agregar_al_diccionario(const char* nombre, const char* ambito) {
         contador_diccionario++;
     }
 }
-
-// 2. Tu función registrar_token corregida
 void registrar_token(TipoToken tipo) {
     strcpy(RegTok[c_tok].lexema, yytext);
     RegTok[c_tok].tipo = tipo;
     RegTok[c_tok].linea = contador_lineas;
 
-    if (tipo == TOKEN_IDENTIFICADOR)
-    {
-        char* ambito_existente = buscar_en_diccionario(yytext);
+    if (tipo == TOKEN_IDENTIFICADOR) {
+        char* ambito_guardado = buscar_en_diccionario(yytext);
 
-        if (es_declaracion) {
-            // Si trae palabra reservada, determina ámbito según las llaves
-            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
-            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
-            agregar_al_diccionario(yytext, nuevo_ambito);
-            es_declaracion = false; // Resetear bandera
+        // 1. FILTRO INICIAL: ¿Está dentro de llaves o paréntesis?
+        if (nivel_llaves > 0) {
+            
+            // ¿Tiene palabra reservada previa O ya estaba en el diccionario de locales?
+            if (es_declaracion || (ambito_guardado != NULL && strcmp(ambito_guardado, "local") == 0)) {
+                strcpy(RegTok[c_tok].ambito, "local");
+                
+                // Si es la primera vez que se declara en este ámbito, la guardas
+                if (ambito_guardado == NULL) {
+                    agregar_al_diccionario(yytext, "local");
+                }
+            } 
+            else {
+                // Es una variable global que se está usando dentro del bloque
+                strcpy(RegTok[c_tok].ambito, "global");
+            }
+            
+            es_declaracion = false; // Reset de la bandera
         } 
-        else if (ambito_existente != NULL) {
-            // Si ya existe en el diccionario, hereda el ámbito guardado
-            strcpy(RegTok[c_tok].ambito, ambito_existente);
-        } 
+        
+        // 2. FUERA DE LLAVES / PARÉNTESIS (Nivel 0)
         else {
-            // Si no fue declarada ni existía (uso directo)
-            char* nuevo_ambito = (nivel_llaves > 0) ? "local" : "global";
-            strcpy(RegTok[c_tok].ambito, nuevo_ambito);
-            agregar_al_diccionario(yytext, nuevo_ambito);
+            strcpy(RegTok[c_tok].ambito, "global");
+            
+            if (es_declaracion) {
+                agregar_al_diccionario(yytext, "global");
+                es_declaracion = false;
+            }
         }
     }
 
@@ -263,6 +282,18 @@ WS       [ \t\r]+
 
 \n              { contador_lineas++; contador_caracteres += yyleng; }
 {WS}            { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
+\"[^\"]*\" {
+    /* 
+     * yyleng contiene la longitud exacta de la cadena
+     * incluyendo las comillas de apertura y cierre.
+     */
+    contador_caracteres += yyleng;
+    
+    /* 
+     * NO retornamos ningún token ni llamamos a funciones de registro.
+     * Flex simplemente consumirá la cadena completa y sumará sus caracteres.
+     */
+}
 
 "abstract"      { registrar_palabra_reservada(PR_ABSTRACT); }
 "assert"        { registrar_palabra_reservada(PR_ASSERT); }
@@ -307,6 +338,8 @@ WS       [ \t\r]+
 "super"         { registrar_palabra_reservada(PR_SUPER); }
 "switch"        { registrar_palabra_reservada(PR_SWITCH); }
 "synchronized"  { registrar_palabra_reservada(PR_SYNCHRONIZED); }
+"string"        |
+"String"        { contador_caracteres += yyleng; registrar_palabra_reservada(PR_STRING); es_declaracion = true; }
 "this"          { registrar_palabra_reservada(PR_THIS); }
 "throw"         { registrar_palabra_reservada(PR_THROW); }
 "throws"        { registrar_palabra_reservada(PR_THROWS); }
@@ -334,6 +367,21 @@ WS       [ \t\r]+
   // los comentarios no se cuentan como operadores
 }
 
+"/*"([^*]|(\*+[^*/]))*\*+"/" {
+    /* 
+     * 1. Contamos las líneas dentro del comentario multilínea
+     */
+    for (int i = 0; i < yyleng; i++) {
+        if (yytext[i] == '\n') {
+            contador_lineas++;
+        }
+    }
+
+    contador_caracteres += yyleng;
+
+    /* NO retornamos ningún token ni sumamos a operadores */
+}
+
 "<<="|">>="|"**="|"?."|"?:"|".."|"..<"|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"?" {
     contador_operadores++;
     contador_caracteres += yyleng;
@@ -341,16 +389,16 @@ WS       [ \t\r]+
     c_ope++;
 }
 
-[.,:;()\[\]] {
+[.,:;\[\]] {
     contador_caracteres += yyleng;
 }
 
-"{" {
+[\{(] {
         contador_caracteres += yyleng;
         nivel_llaves++;
     }
 
-"}" {
+[\}\)] {
         contador_caracteres += yyleng;
         nivel_llaves--;
     }
@@ -381,6 +429,9 @@ WS       [ \t\r]+
 
 .               { 
     contador_caracteres += yyleng; 
+    strcpy(RegErr[c_err].codigo, yytext);
+    RegErr[c_err].linea = contador_lineas;
+    c_err++;
 }
 
 %%
@@ -422,6 +473,11 @@ printf("--- Conteo de Enteros ---\n");
         if (RegTok[i].tipo == TOKEN_OPERADOR) {
             printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
         }
+    }
+
+     printf("\n--- Conteo de Errores Lexicos ---\n");
+    for (int i = 0; i < c_err; i++) {
+        printf("Error: %s | Linea: %d\n", RegErr[i].codigo, RegErr[i].linea);
     }
 
     // --- Filtrar, ordenar e imprimir palabras reservadas ---
