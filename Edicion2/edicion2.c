@@ -1,6 +1,6 @@
-#line 1 "edicion2.c"
+#line 2 "edicion2.c"
 
-#line 3 "edicion2.c"
+#line 4 "edicion2.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -944,8 +944,8 @@ int comparar_descendente(const void *a, const void *b) {
     return p2->conteo - p1->conteo;
 }
 
-#line 947 "edicion2.c"
 #line 948 "edicion2.c"
+#line 949 "edicion2.c"
 
 #define INITIAL 0
 
@@ -1165,7 +1165,7 @@ YY_DECL
 #line 327 "edicion2.l"
 
 
-#line 1168 "edicion2.c"
+#line 1169 "edicion2.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1662,7 +1662,7 @@ YY_RULE_SETUP
 #line 483 "edicion2.l"
 ECHO;
 	YY_BREAK
-#line 1665 "edicion2.c"
+#line 1666 "edicion2.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

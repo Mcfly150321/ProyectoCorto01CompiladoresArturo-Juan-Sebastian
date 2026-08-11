@@ -1,0 +1,55 @@
+--- Conteo de Enteros ---
+Lexema: 0 | Linea: 9
+
+--- Conteo de Flotantes ---
+Lexema: 1.15 | Linea: 3
+Lexema: 0.0 | Linea: 12
+
+--- Conteo de Identificadores ---
+Lexema: calcularTotal | Linea: 1
+Lexema: precio | Linea: 1
+Lexema: cantidad | Linea: 1
+Lexema: impuesto | Linea: 3
+Lexema: precio | Linea: 4
+Lexema: activo | Linea: 6
+Lexema: vacio | Linea: 7
+Lexema: cantidad | Linea: 9
+Lexema: activo | Linea: 9
+Lexema: precio | Linea: 10
+Lexema: cantidad | Linea: 10
+Lexema: impuesto | Linea: 10
+
+--- Conteo de Booleanos ---
+Lexema: true | Linea: 6
+Lexema: false | Linea: 7
+
+--- Conteo de Operadores ---
+Lexema: = | Linea: 3
+Lexema: ++ | Linea: 4
+Lexema: = | Linea: 6
+Lexema: = | Linea: 7
+Lexema: > | Linea: 9
+Lexema: && | Linea: 9
+Lexema: * | Linea: 10
+Lexema: * | Linea: 10
+
+--- Conteo de Palabras Reservadas ---
+Lexema: def | Linea: 1
+Lexema: double | Linea: 3
+Lexema: boolean | Linea: 6
+Lexema: boolean | Linea: 7
+Lexema: if | Linea: 9
+Lexema: return | Linea: 10
+Lexema: else | Linea: 11
+Lexema: return | Linea: 12
+
+--- Cantidades Totales ---
+Cantidad de líneas de código: 14
+Cantidad de caracteres encontrados: 262
+Cantidad de números enteros encontrados: 1
+Cantidad de números flotantes encontrados: 2
+Cantidad de identificadores encontrados: 12
+Cantidad de valores booleanos: 2
+Cantidad de operadores encontrados: 8
+Cantidad de palabras reservadas encontradas: 8
+Total general de tokens: 33

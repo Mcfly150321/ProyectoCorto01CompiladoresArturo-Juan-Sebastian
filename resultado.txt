@@ -1,0 +1,56 @@
+
+Reporte #1______________________________
+
+--- Cantidades Totales ---
+Cantidad de lineas de codigo: 5
+Cantidad de caracteres encontrados: 153
+Cantidad de numeros enteros encontrados: 0
+Cantidad de numeros flotantes encontrados: 0
+Cantidad de identificadores encontrados: 26
+Cantidad de valores booleanos: 0
+Cantidad de operadores encontrados: 0
+Cantidad de palabras reservadas encontradas: 0
+Total general de tokens: 26
+
+
+Reporte #2____________________
+
+--- Conteo de Enteros ---
+
+--- Conteo de Flotantes ---
+
+--- Conteo de Identificadores (Tabla de Simbolos) ---
+Lexema: Aca | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: commit | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: inicial | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: Si | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: hacen | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: pull | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: y | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: lo | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: ven | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: esta | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: todo | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: bien | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: Sebastian | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: reportando | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: el | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: pull | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: completo | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: de | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: nuevo | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: juanluis | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: reportando | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: el | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: pull | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: completo | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: de | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: nuevo | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+
+--- Conteo de Booleanos ---
+
+--- Conteo de Operadores ---
+
+--- Conteo de Palabras Reservadas ---
+
+--- Conteo de Errores Lexicos ---
