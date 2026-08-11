@@ -2673,66 +2673,29 @@ int yywrap() { return 1; }
 
 int main() {
     yylex();
-printf("--- Conteo de Enteros ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].tipo == TOKEN_ENTERO) {
-            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
-        }
-    }
 
-    printf("\n--- Conteo de Flotantes ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].tipo == TOKEN_FLOTANTE) {
-            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
-        }
-    }
+// =========================================================================
+    // REPORTE #1: Resumen de Totales y Conteo de Palabras Reservadas
+    // =========================================================================
+    printf("\nReporte #1______________________________\n\n");
 
-    printf("\n--- Conteo de Identificadores ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].tipo == TOKEN_IDENTIFICADOR) {
-            printf("Lexema: %s | Linea: %d | Token: %s | Ambito: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].ambito);
-        }
-    }
+    printf("--- Cantidades Totales ---\n");
+    printf("Cantidad de lineas de codigo: %d\n", contador_lineas);
+    printf("Cantidad de caracteres encontrados: %d\n", contador_caracteres);
+    printf("Cantidad de numeros enteros encontrados: %d\n", c_int);
+    printf("Cantidad de numeros flotantes encontrados: %d\n", c_float);
+    printf("Cantidad de identificadores encontrados: %d\n", c_ids);
+    printf("Cantidad de valores booleanos: %d\n", c_bool);
+    printf("Cantidad de operadores encontrados: %d\n", c_ope);
+    printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
+    printf("Total general de tokens: %d\n", c_tok);
 
-    printf("\n--- Conteo de Booleanos ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].tipo == TOKEN_BOOLEANO) {
-            printf("Lexema: %s | Linea: %d | Token: %s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
-        }
-    }
-
-    printf("\n--- Conteo de Operadores ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].tipo == TOKEN_OPERADOR) {
-            printf("Lexema: %s | Linea: %d | Token: %s_%s\n", RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].lexema);
-        }
-    }
-
-     printf("\n--- Conteo de Errores Lexicos ---\n");
-    for (int i = 0; i < c_err; i++) {
-        printf("Error: %s | Linea: %d\n", RegErr[i].codigo, RegErr[i].linea);
-    }
-
-   printf("\n--- Conteo de Palabras Reservadas ---\n");
-    for (int i = 0; i < c_tok; i++) {
-        if (RegTok[i].subtipo_pr > PR_NINGUNA && RegTok[i].subtipo_pr < TOTAL_PALABRAS_RESERVADAS) {
-            printf("Lexema: %-12s | Linea: %-3d | Token: TOKEN_RESERVADA_%s", 
-                   RegTok[i].lexema, 
-                   RegTok[i].linea, 
-                   nombres_pr[RegTok[i].subtipo_pr]); // Sin restar nada, acceso directo 1:1
-            printf("\n");
-                }
-
-    }
-
-    // --- Filtrar, ordenar e imprimir palabras reservadas ---
+    // --- Filtrar, ordenar e imprimir palabras reservadas en orden descendente ---
     InfoPalabra lista_pr[TOTAL_PALABRAS_RESERVADAS];
     int total_unicas = 0;
 
-    // Empezamos en PR_ABSTRACT (2) porque 0 es PR_NINGUNA y 1 es omitido
     for (int i = PR_ABSTRACT; i < TOTAL_PALABRAS_RESERVADAS; i++) {
         if (conteo_pr[i] > 0) {
-            // Copia directa usando la posición 'i'
             strncpy(lista_pr[total_unicas].palabra, nombres_pr[i], sizeof(lista_pr[total_unicas].palabra) - 1);
             lista_pr[total_unicas].palabra[sizeof(lista_pr[total_unicas].palabra) - 1] = '\0';
             lista_pr[total_unicas].conteo = conteo_pr[i];
@@ -2749,15 +2712,66 @@ printf("--- Conteo de Enteros ---\n");
         }
     }
 
-    printf("\n--- Cantidades Totales ---\n");
-    printf("Cantidad de lineas de codigo: %d\n", contador_lineas);
-    printf("Cantidad de caracteres encontrados: %d\n", contador_caracteres);
-    printf("Cantidad de numeros enteros encontrados: %d\n", c_int);
-    printf("Cantidad de numeros flotantes encontrados: %d\n", c_float);
-    printf("Cantidad de identificadores encontrados: %d\n", c_ids);
-    printf("Cantidad de valores booleanos: %d\n", c_bool);
-    printf("Cantidad de operadores encontrados: %d\n", c_ope);
-    printf("Cantidad de palabras reservadas encontradas: %d\n", c_res);
-    printf("Total general de tokens: %d\n", c_tok);
+
+    // =========================================================================
+    // REPORTE #2: Detalle de Lexemas, Tokens Específicos y Tabla de Símbolos
+    // =========================================================================
+    printf("\n\nReporte #2____________________\n\n");
+
+    printf("--- Conteo de Enteros ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_ENTERO) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", 
+                   RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
+    }
+
+    printf("\n--- Conteo de Flotantes ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_FLOTANTE) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", 
+                   RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
+    }
+
+    printf("\n--- Conteo de Identificadores (Tabla de Simbolos) ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_IDENTIFICADOR) {
+            printf("Lexema: %s | Linea: %d | Token: %s | Ambito: %s\n", 
+                   RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].ambito);
+        }
+    }
+
+    printf("\n--- Conteo de Booleanos ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_BOOLEANO) {
+            printf("Lexema: %s | Linea: %d | Token: %s\n", 
+                   RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo]);
+        }
+    }
+
+    printf("\n--- Conteo de Operadores ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].tipo == TOKEN_OPERADOR) {
+            printf("Lexema: %s | Linea: %d | Token: %s_%s\n", 
+                   RegTok[i].lexema, RegTok[i].linea, nombres_tipos_token[RegTok[i].tipo], RegTok[i].lexema);
+        }
+    }
+
+    printf("\n--- Conteo de Palabras Reservadas ---\n");
+    for (int i = 0; i < c_tok; i++) {
+        if (RegTok[i].subtipo_pr > PR_NINGUNA && RegTok[i].subtipo_pr < TOTAL_PALABRAS_RESERVADAS) {
+            printf("Lexema: %-12s | Linea: %-3d | Token: TOKEN_RESERVADA_%s\n", 
+                   RegTok[i].lexema, 
+                   RegTok[i].linea, 
+                   nombres_pr[RegTok[i].subtipo_pr]);
+        }
+    }
+
+    printf("\n--- Conteo de Errores Lexicos ---\n");
+    for (int i = 0; i < c_err; i++) {
+        printf("Error: %s | Linea: %d\n", RegErr[i].codigo, RegErr[i].linea);
+    }
+
        return 0;
 }
