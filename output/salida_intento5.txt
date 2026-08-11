@@ -1,0 +1,73 @@
+
+Reporte #1______________________________
+
+--- Cantidades Totales ---
+Cantidad de lineas de codigo: 21
+Cantidad de caracteres encontrados: 389
+Cantidad de numeros enteros encontrados: 1
+Cantidad de numeros flotantes encontrados: 3
+Cantidad de identificadores encontrados: 12
+Cantidad de valores booleanos: 1
+Cantidad de operadores encontrados: 8
+Cantidad de palabras reservadas encontradas: 8
+Total general de tokens: 33
+
+--- Conteo de Palabras Reservadas (Orden Descendente) ---
+Palabra: double       | Apariciones: 2
+Palabra: boolean      | Apariciones: 1
+Palabra: class        | Apariciones: 1
+Palabra: if           | Apariciones: 1
+Palabra: int          | Apariciones: 1
+Palabra: return       | Apariciones: 1
+Palabra: String       | Apariciones: 1
+
+
+Reporte #2____________________
+
+--- Conteo de Enteros ---
+Lexema: 0 | Linea: 11 | Token: TOKEN_ENTERO
+
+--- Conteo de Flotantes ---
+Lexema: 500.0 | Linea: 11 | Token: TOKEN_FLOTANTE
+Lexema: 0.90 | Linea: 12 | Token: TOKEN_FLOTANTE
+Lexema: 1.0 | Linea: 16 | Token: TOKEN_FLOTANTE
+
+--- Conteo de Identificadores (Tabla de Simbolos) ---
+Lexema: EvaluadorDescuento | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: calcular | Linea: 7 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 7 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: clientes | Linea: 7 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: estado | Linea: 8 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: activo | Linea: 9 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 11 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: clientes | Linea: 11 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 12 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 12 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 16 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 18 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+
+--- Conteo de Booleanos ---
+Lexema: true | Linea: 9 | Token: TOKEN_BOOLEANO
+
+--- Conteo de Operadores ---
+Lexema: = | Linea: 8 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 9 | Token: TOKEN_OPERADOR_=
+Lexema: >= | Linea: 11 | Token: TOKEN_OPERADOR_>=
+Lexema: && | Linea: 11 | Token: TOKEN_OPERADOR_&&
+Lexema: > | Linea: 11 | Token: TOKEN_OPERADOR_>
+Lexema: = | Linea: 12 | Token: TOKEN_OPERADOR_=
+Lexema: * | Linea: 12 | Token: TOKEN_OPERADOR_*
+Lexema: = | Linea: 16 | Token: TOKEN_OPERADOR_=
+
+--- Conteo de Palabras Reservadas ---
+Lexema: class        | Linea: 2   | Token: TOKEN_RESERVADA_class
+Lexema: double       | Linea: 7   | Token: TOKEN_RESERVADA_double
+Lexema: double       | Linea: 7   | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 7   | Token: TOKEN_RESERVADA_int
+Lexema: String       | Linea: 8   | Token: TOKEN_RESERVADA_String
+Lexema: boolean      | Linea: 9   | Token: TOKEN_RESERVADA_boolean
+Lexema: if           | Linea: 11  | Token: TOKEN_RESERVADA_if
+Lexema: return       | Linea: 18  | Token: TOKEN_RESERVADA_return
+
+--- Conteo de Errores Lexicos ---
+Error: @ | Linea: 16
