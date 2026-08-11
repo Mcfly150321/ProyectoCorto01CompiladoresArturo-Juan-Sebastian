@@ -633,6 +633,7 @@ char *yytext;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 //debemos dividir en palabras reservadas, enteros, flotantes, identificadores, booleanos, operadores
 #define MAX_DICCIONARIO 100
 int nivel_llaves = 0; // 0 significa ámbito global
@@ -943,8 +944,8 @@ int comparar_descendente(const void *a, const void *b) {
     return p2->conteo - p1->conteo;
 }
 
-#line 946 "edicion2.c"
 #line 947 "edicion2.c"
+#line 948 "edicion2.c"
 
 #define INITIAL 0
 
@@ -1161,10 +1162,10 @@ YY_DECL
 		}
 
 	{
-#line 326 "edicion2.l"
+#line 327 "edicion2.l"
 
 
-#line 1167 "edicion2.c"
+#line 1168 "edicion2.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1224,18 +1225,18 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 328 "edicion2.l"
+#line 329 "edicion2.l"
 { contador_lineas++; contador_caracteres += yyleng; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 329 "edicion2.l"
+#line 330 "edicion2.l"
 { contador_caracteres += yyleng; /* Ignorar espacios pero sumarlos al total de caracteres */ }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 330 "edicion2.l"
+#line 331 "edicion2.l"
 {
     /* 
      * yyleng contiene la longitud exacta de la cadena
@@ -1251,304 +1252,304 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 343 "edicion2.l"
+#line 344 "edicion2.l"
 { registrar_palabra_reservada(PR_ABSTRACT); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 344 "edicion2.l"
+#line 345 "edicion2.l"
 { registrar_palabra_reservada(PR_ASSERT); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 345 "edicion2.l"
+#line 346 "edicion2.l"
 { registrar_palabra_reservada(PR_BOOLEAN); es_declaracion = true; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 346 "edicion2.l"
+#line 347 "edicion2.l"
 { registrar_palabra_reservada(PR_BREAK); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 347 "edicion2.l"
+#line 348 "edicion2.l"
 { registrar_palabra_reservada(PR_BYTE); es_declaracion = true; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 348 "edicion2.l"
+#line 349 "edicion2.l"
 { registrar_palabra_reservada(PR_CASE); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 349 "edicion2.l"
+#line 350 "edicion2.l"
 { registrar_palabra_reservada(PR_CATCH); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 350 "edicion2.l"
+#line 351 "edicion2.l"
 { registrar_palabra_reservada(PR_CHAR); es_declaracion = true; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 351 "edicion2.l"
+#line 352 "edicion2.l"
 { registrar_palabra_reservada(PR_CLASS); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 352 "edicion2.l"
+#line 353 "edicion2.l"
 { registrar_palabra_reservada(PR_CONST); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 353 "edicion2.l"
+#line 354 "edicion2.l"
 { registrar_palabra_reservada(PR_CONTINUE); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 354 "edicion2.l"
+#line 355 "edicion2.l"
 { registrar_palabra_reservada(PR_DEFAULT); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 355 "edicion2.l"
+#line 356 "edicion2.l"
 { registrar_palabra_reservada(PR_DO); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 356 "edicion2.l"
+#line 357 "edicion2.l"
 { registrar_palabra_reservada(PR_DOUBLE); es_declaracion = true; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 357 "edicion2.l"
+#line 358 "edicion2.l"
 { registrar_palabra_reservada(PR_ELSE); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 358 "edicion2.l"
+#line 359 "edicion2.l"
 { registrar_palabra_reservada(PR_ENUM); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 359 "edicion2.l"
+#line 360 "edicion2.l"
 { registrar_palabra_reservada(PR_EXTENDS); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 360 "edicion2.l"
+#line 361 "edicion2.l"
 { registrar_palabra_reservada(PR_FINAL); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 361 "edicion2.l"
+#line 362 "edicion2.l"
 { registrar_palabra_reservada(PR_FINALLY); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 362 "edicion2.l"
+#line 363 "edicion2.l"
 { registrar_palabra_reservada(PR_FLOAT); es_declaracion = true; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 363 "edicion2.l"
+#line 364 "edicion2.l"
 { registrar_palabra_reservada(PR_FOR); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 364 "edicion2.l"
+#line 365 "edicion2.l"
 { registrar_palabra_reservada(PR_GOTO); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 365 "edicion2.l"
+#line 366 "edicion2.l"
 { registrar_palabra_reservada(PR_IF); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 366 "edicion2.l"
+#line 367 "edicion2.l"
 { registrar_palabra_reservada(PR_IMPLEMENTS); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 367 "edicion2.l"
+#line 368 "edicion2.l"
 { registrar_palabra_reservada(PR_IMPORT); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 368 "edicion2.l"
+#line 369 "edicion2.l"
 { registrar_palabra_reservada(PR_INSTANCEOF); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 369 "edicion2.l"
+#line 370 "edicion2.l"
 { registrar_palabra_reservada(PR_INT); es_declaracion = true; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 370 "edicion2.l"
+#line 371 "edicion2.l"
 { registrar_palabra_reservada(PR_INTERFACE); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 371 "edicion2.l"
+#line 372 "edicion2.l"
 { registrar_palabra_reservada(PR_LONG); es_declaracion = true; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 372 "edicion2.l"
+#line 373 "edicion2.l"
 { registrar_palabra_reservada(PR_NATIVE); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 373 "edicion2.l"
+#line 374 "edicion2.l"
 { registrar_palabra_reservada(PR_NEW); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 374 "edicion2.l"
+#line 375 "edicion2.l"
 { registrar_palabra_reservada(PR_NULL); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 375 "edicion2.l"
+#line 376 "edicion2.l"
 { registrar_palabra_reservada(PR_PACKAGE); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 376 "edicion2.l"
+#line 377 "edicion2.l"
 { registrar_palabra_reservada(PR_PRIVATE); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 377 "edicion2.l"
+#line 378 "edicion2.l"
 { registrar_palabra_reservada(PR_PROTECTED); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 378 "edicion2.l"
+#line 379 "edicion2.l"
 { registrar_palabra_reservada(PR_PUBLIC); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 379 "edicion2.l"
+#line 380 "edicion2.l"
 { registrar_palabra_reservada(PR_RETURN); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 380 "edicion2.l"
+#line 381 "edicion2.l"
 { registrar_palabra_reservada(PR_SHORT); es_declaracion = true; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 381 "edicion2.l"
+#line 382 "edicion2.l"
 { registrar_palabra_reservada(PR_STATIC); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 382 "edicion2.l"
+#line 383 "edicion2.l"
 { registrar_palabra_reservada(PR_STRICTFP); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 383 "edicion2.l"
+#line 384 "edicion2.l"
 { registrar_palabra_reservada(PR_SUPER); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 384 "edicion2.l"
+#line 385 "edicion2.l"
 { registrar_palabra_reservada(PR_SWITCH); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 385 "edicion2.l"
+#line 386 "edicion2.l"
 { registrar_palabra_reservada(PR_SYNCHRONIZED); }
 	YY_BREAK
 case 47:
-#line 387 "edicion2.l"
+#line 388 "edicion2.l"
 case 48:
 YY_RULE_SETUP
-#line 387 "edicion2.l"
+#line 388 "edicion2.l"
 { contador_caracteres += yyleng; registrar_palabra_reservada(PR_STRING); es_declaracion = true; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 388 "edicion2.l"
+#line 389 "edicion2.l"
 { registrar_palabra_reservada(PR_THIS); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 389 "edicion2.l"
+#line 390 "edicion2.l"
 { registrar_palabra_reservada(PR_THROW); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 390 "edicion2.l"
+#line 391 "edicion2.l"
 { registrar_palabra_reservada(PR_THROWS); }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 391 "edicion2.l"
+#line 392 "edicion2.l"
 { registrar_palabra_reservada(PR_TRANSIENT); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 392 "edicion2.l"
+#line 393 "edicion2.l"
 { registrar_palabra_reservada(PR_TRY); }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 393 "edicion2.l"
+#line 394 "edicion2.l"
 { registrar_palabra_reservada(PR_VOID); es_declaracion = true; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 394 "edicion2.l"
+#line 395 "edicion2.l"
 { registrar_palabra_reservada(PR_VOLATILE); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 395 "edicion2.l"
+#line 396 "edicion2.l"
 { registrar_palabra_reservada(PR_WHILE); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 396 "edicion2.l"
+#line 397 "edicion2.l"
 { registrar_palabra_reservada(PR_AS); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 397 "edicion2.l"
+#line 398 "edicion2.l"
 { registrar_palabra_reservada(PR_DEF); es_declaracion = true; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 398 "edicion2.l"
+#line 399 "edicion2.l"
 { registrar_palabra_reservada(PR_IN); }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 399 "edicion2.l"
+#line 400 "edicion2.l"
 { registrar_palabra_reservada(PR_TRAIT); }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 400 "edicion2.l"
+#line 401 "edicion2.l"
 { registrar_palabra_reservada(PR_PROPERTY); }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 401 "edicion2.l"
+#line 402 "edicion2.l"
 { registrar_palabra_reservada(PR_IT); }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 402 "edicion2.l"
+#line 403 "edicion2.l"
 { registrar_palabra_reservada(PR_VAR); es_declaracion = true; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 406 "edicion2.l"
+#line 407 "edicion2.l"
 {
     contador_caracteres += yyleng;
     registrar_token(TOKEN_BOOLEANO);
@@ -1557,7 +1558,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 411 "edicion2.l"
+#line 412 "edicion2.l"
 {
   // los comentarios no se cuentan como operadores
 }
@@ -1565,7 +1566,7 @@ YY_RULE_SETUP
 case 66:
 /* rule 66 can match eol */
 YY_RULE_SETUP
-#line 415 "edicion2.l"
+#line 416 "edicion2.l"
 {
     /* 
      * 1. Contamos las líneas dentro del comentario multilínea
@@ -1583,7 +1584,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 430 "edicion2.l"
+#line 431 "edicion2.l"
 {
     contador_operadores++;
     contador_caracteres += yyleng;
@@ -1593,14 +1594,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 437 "edicion2.l"
+#line 438 "edicion2.l"
 {
     contador_caracteres += yyleng;
 }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 441 "edicion2.l"
+#line 442 "edicion2.l"
 {
         contador_caracteres += yyleng;
         nivel_llaves++;
@@ -1608,7 +1609,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 446 "edicion2.l"
+#line 447 "edicion2.l"
 {
         contador_caracteres += yyleng;
         nivel_llaves--;
@@ -1616,7 +1617,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 452 "edicion2.l"
+#line 453 "edicion2.l"
 { 
     contador_ids++; 
     contador_caracteres += yyleng;
@@ -1626,7 +1627,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 459 "edicion2.l"
+#line 460 "edicion2.l"
 { 
     contador_enteros++; 
     contador_caracteres += yyleng;
@@ -1637,7 +1638,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 467 "edicion2.l"
+#line 468 "edicion2.l"
 { 
     contador_float++; 
     contador_caracteres += yyleng;
@@ -1648,7 +1649,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 475 "edicion2.l"
+#line 476 "edicion2.l"
 { 
     contador_caracteres += yyleng; 
     strcpy(RegErr[c_err].codigo, yytext);
@@ -1658,10 +1659,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 482 "edicion2.l"
+#line 483 "edicion2.l"
 ECHO;
 	YY_BREAK
-#line 1664 "edicion2.c"
+#line 1665 "edicion2.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2666,7 +2667,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 482 "edicion2.l"
+#line 483 "edicion2.l"
 
 
 int yywrap() { return 1; }

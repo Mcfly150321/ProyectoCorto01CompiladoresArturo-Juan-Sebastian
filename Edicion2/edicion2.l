@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 //debemos dividir en palabras reservadas, enteros, flotantes, identificadores, booleanos, operadores
 #define MAX_DICCIONARIO 100
 int nivel_llaves = 0; // 0 significa ámbito global
