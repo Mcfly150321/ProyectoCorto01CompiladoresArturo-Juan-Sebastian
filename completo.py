@@ -294,7 +294,7 @@ class AppInterfaz:
 
         nombre_txt = f"salida_{nombre_sin_ext}.txt"
         ruta_salida_absoluta = os.path.join(dir_output, nombre_txt)
-        ruta_binario_absoluta = os.path.join(base_dir, "Edicion2", "edicion2")
+        ruta_binario_absoluta = os.path.join(base_dir, "Edicion2", "edicion2F2")
 
         try:
             with open(ruta_archivo, "r", encoding="utf-8", errors="ignore") as f_in:
