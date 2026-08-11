@@ -75,8 +75,11 @@ typedef enum {
     PR_IT, 
     PR_VAR, 
     PR_STRING, // Vale 62
-    
-    TOTAL_PALABRAS_RESERVADAS // Vale 63
+    PR_YIELD,        // Groovy 3+/4+ (switch expressions)
+    PR_SEALED,        // clases selladas
+    PR_NON_SEALED,    // idem
+    PR_PERMITS,       // idem
+    TOTAL_PALABRAS_RESERVADAS // Vale 67
 } SubtipoReservada;
 
 // Nombres de las palabras reservadas alineados exacto con el enum
@@ -143,11 +146,15 @@ const char *nombres_pr[] = {
     "property",     // Índice 59
     "it",           // Índice 60
     "var",          // Índice 61
-    "String"        // Índice 62 (PR_STRING)
+    "String",        // Índice 62 (PR_STRING)
+    "yield",        // Groovy 3+/4+ (switch expressions)
+    "sealed",       // clases selladas
+    "non-sealed",   // idem
+    "permits"       // idem
 };
 
 // Tus operadores empiezan después del último elemento del enum (TOTAL_PALABRAS_RESERVADAS)
-#define OP_ASIG_SL 63
+#define OP_ASIG_SL 67
 
 typedef enum {
     TOKEN_ENTERO,
@@ -402,6 +409,10 @@ WS       [ \t\r]+
 "it"            { registrar_palabra_reservada(PR_IT); }
 "var"           { registrar_palabra_reservada(PR_VAR); es_declaracion = true; }
 
+"yield"        {registrar_palabra_reservada(PR_YIELD); }
+"sealed"        { registrar_palabra_reservada(PR_SEALED); }
+"non-sealed"   { registrar_palabra_reservada(PR_NON_SEALED); }
+"permits"       { registrar_palabra_reservada(PR_PERMITS); }
 
 
 "true"|"false" {
@@ -428,7 +439,7 @@ WS       [ \t\r]+
     /* NO retornamos ningún token ni sumamos a operadores */
 }
 
-"<<="|">>="|"**="|"?."|"?:"|".."|"..<"|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"?" {
+"<<="|">>="|"**="|"?."|"?:"|".."|"..<"|"=~"|"==~"|"::"|"++"|"--"|"**"|"+="|"-="|"*="|"/="|"%="|"<<"|">>"|">>>"|"=="|"!="|"<="|">="|"<=>"|"&&"|"||"|"="|"+"|"-"|"*"|"/"|"%"|"!"|"<"|">"|"&"|"|"|"^"|"~"|"?"|"->"|"&="|"|="|"^="|">>>="|"*."|".&"|".@"|"!in"|"!instanceof" {
     contador_operadores++;
     contador_caracteres += yyleng;
     registrar_token(TOKEN_OPERADOR);
