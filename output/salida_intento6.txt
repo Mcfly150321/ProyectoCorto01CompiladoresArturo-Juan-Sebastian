@@ -1,0 +1,126 @@
+
+Reporte #1______________________________
+
+--- Cantidades Totales ---
+Cantidad de lineas de codigo: 32
+Cantidad de caracteres encontrados: 685
+Cantidad de numeros enteros encontrados: 5
+Cantidad de numeros flotantes encontrados: 4
+Cantidad de identificadores encontrados: 33
+Cantidad de valores booleanos: 2
+Cantidad de operadores encontrados: 18
+Cantidad de palabras reservadas encontradas: 19
+Total general de tokens: 81
+
+--- Conteo de Palabras Reservadas (Orden Descendente) ---
+Palabra: boolean      | Apariciones: 4
+Palabra: double       | Apariciones: 3
+Palabra: int          | Apariciones: 2
+Palabra: String       | Apariciones: 2
+Palabra: class        | Apariciones: 1
+Palabra: else         | Apariciones: 1
+Palabra: for          | Apariciones: 1
+Palabra: if           | Apariciones: 1
+Palabra: implements   | Apariciones: 1
+Palabra: interface    | Apariciones: 1
+Palabra: new          | Apariciones: 1
+Palabra: return       | Apariciones: 1
+
+
+Reporte #2____________________
+
+--- Conteo de Enteros ---
+Lexema: 0 | Linea: 8 | Token: TOKEN_ENTERO
+Lexema: 1 | Linea: 17 | Token: TOKEN_ENTERO
+Lexema: 0 | Linea: 22 | Token: TOKEN_ENTERO
+Lexema: 3 | Linea: 22 | Token: TOKEN_ENTERO
+Lexema: 1 | Linea: 22 | Token: TOKEN_ENTERO
+
+--- Conteo de Flotantes ---
+Lexema: 2500.00 | Linea: 7 | Token: TOKEN_FLOTANTE
+Lexema: 0.0 | Linea: 14 | Token: TOKEN_FLOTANTE
+Lexema: 1.05 | Linea: 23 | Token: TOKEN_FLOTANTE
+Lexema: 1200.50 | Linea: 31 | Token: TOKEN_FLOTANTE
+
+--- Conteo de Identificadores (Tabla de Simbolos) ---
+Lexema: IPago | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: procesarPago | Linea: 3 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 3 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: tarjeta | Linea: 3 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: GatewayPago | Linea: 6 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: IPago | Linea: 6 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: limite_diario | Linea: 7 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: intentos_fallidos | Linea: 8 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: procesarPago | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: tarjeta | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: transaccion_valida | Linea: 11 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: limite_diario | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: transaccion_valida | Linea: 15 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: intentos_fallidos | Linea: 17 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: intentos_fallidos | Linea: 17 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: error_codigo_101 | Linea: 18 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: i | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: i | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: i | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: i | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 23 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: monto | Linea: 23 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: transaccion_valida | Linea: 25 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: transaccion_valida | Linea: 26 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: GatewayPago | Linea: 30 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: gateway | Linea: 30 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: GatewayPago | Linea: 30 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: resultado | Linea: 31 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: gateway | Linea: 31 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: procesarPago | Linea: 31 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+
+--- Conteo de Booleanos ---
+Lexema: false | Linea: 11 | Token: TOKEN_BOOLEANO
+Lexema: true | Linea: 15 | Token: TOKEN_BOOLEANO
+
+--- Conteo de Operadores ---
+Lexema: = | Linea: 7 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 8 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 11 | Token: TOKEN_OPERADOR_=
+Lexema: > | Linea: 14 | Token: TOKEN_OPERADOR_>
+Lexema: && | Linea: 14 | Token: TOKEN_OPERADOR_&&
+Lexema: <= | Linea: 14 | Token: TOKEN_OPERADOR_<=
+Lexema: = | Linea: 15 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 17 | Token: TOKEN_OPERADOR_=
+Lexema: + | Linea: 17 | Token: TOKEN_OPERADOR_+
+Lexema: = | Linea: 22 | Token: TOKEN_OPERADOR_=
+Lexema: < | Linea: 22 | Token: TOKEN_OPERADOR_<
+Lexema: = | Linea: 22 | Token: TOKEN_OPERADOR_=
+Lexema: + | Linea: 22 | Token: TOKEN_OPERADOR_+
+Lexema: = | Linea: 23 | Token: TOKEN_OPERADOR_=
+Lexema: ~ | Linea: 23 | Token: TOKEN_OPERADOR_~
+Lexema: ++ | Linea: 25 | Token: TOKEN_OPERADOR_++
+Lexema: = | Linea: 30 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 31 | Token: TOKEN_OPERADOR_=
+
+--- Conteo de Palabras Reservadas ---
+Lexema: interface    | Linea: 2   | Token: TOKEN_RESERVADA_interface
+Lexema: boolean      | Linea: 3   | Token: TOKEN_RESERVADA_boolean
+Lexema: double       | Linea: 3   | Token: TOKEN_RESERVADA_double
+Lexema: String       | Linea: 3   | Token: TOKEN_RESERVADA_String
+Lexema: class        | Linea: 6   | Token: TOKEN_RESERVADA_class
+Lexema: implements   | Linea: 6   | Token: TOKEN_RESERVADA_implements
+Lexema: double       | Linea: 7   | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 8   | Token: TOKEN_RESERVADA_int
+Lexema: boolean      | Linea: 10  | Token: TOKEN_RESERVADA_boolean
+Lexema: double       | Linea: 10  | Token: TOKEN_RESERVADA_double
+Lexema: String       | Linea: 10  | Token: TOKEN_RESERVADA_String
+Lexema: boolean      | Linea: 11  | Token: TOKEN_RESERVADA_boolean
+Lexema: if           | Linea: 14  | Token: TOKEN_RESERVADA_if
+Lexema: else         | Linea: 16  | Token: TOKEN_RESERVADA_else
+Lexema: for          | Linea: 22  | Token: TOKEN_RESERVADA_for
+Lexema: int          | Linea: 22  | Token: TOKEN_RESERVADA_int
+Lexema: return       | Linea: 26  | Token: TOKEN_RESERVADA_return
+Lexema: new          | Linea: 30  | Token: TOKEN_RESERVADA_new
+Lexema: boolean      | Linea: 31  | Token: TOKEN_RESERVADA_boolean
+
+--- Conteo de Errores Lexicos ---
+Error: # | Linea: 18

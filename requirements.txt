@@ -1,0 +1,5 @@
+pymongo
+fpdf
+dotenv
+reportlab
+#solo escriben pip install -r requirements.txt
