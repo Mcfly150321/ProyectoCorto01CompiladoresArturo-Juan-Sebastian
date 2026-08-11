@@ -2,55 +2,113 @@
 Reporte #1______________________________
 
 --- Cantidades Totales ---
-Cantidad de lineas de codigo: 5
-Cantidad de caracteres encontrados: 153
-Cantidad de numeros enteros encontrados: 0
-Cantidad de numeros flotantes encontrados: 0
-Cantidad de identificadores encontrados: 26
+Cantidad de lineas de codigo: 25
+Cantidad de caracteres encontrados: 605
+Cantidad de numeros enteros encontrados: 4
+Cantidad de numeros flotantes encontrados: 3
+Cantidad de identificadores encontrados: 32
 Cantidad de valores booleanos: 0
-Cantidad de operadores encontrados: 0
-Cantidad de palabras reservadas encontradas: 0
-Total general de tokens: 26
+Cantidad de operadores encontrados: 16
+Cantidad de palabras reservadas encontradas: 18
+Total general de tokens: 73
+
+--- Conteo de Palabras Reservadas (Orden Descendente) ---
+Palabra: double       | Apariciones: 7
+Palabra: int          | Apariciones: 4
+Palabra: class        | Apariciones: 1
+Palabra: implements   | Apariciones: 1
+Palabra: interface    | Apariciones: 1
+Palabra: new          | Apariciones: 1
+Palabra: return       | Apariciones: 1
+Palabra: while        | Apariciones: 1
+Palabra: String       | Apariciones: 1
 
 
 Reporte #2____________________
 
 --- Conteo de Enteros ---
+Lexema: 10 | Linea: 7 | Token: TOKEN_ENTERO
+Lexema: 0 | Linea: 11 | Token: TOKEN_ENTERO
+Lexema: 1 | Linea: 15 | Token: TOKEN_ENTERO
+Lexema: 4 | Linea: 23 | Token: TOKEN_ENTERO
 
 --- Conteo de Flotantes ---
+Lexema: 0.05 | Linea: 6 | Token: TOKEN_FLOTANTE
+Lexema: 0.01 | Linea: 14 | Token: TOKEN_FLOTANTE
+Lexema: 3500.0 | Linea: 23 | Token: TOKEN_FLOTANTE
 
 --- Conteo de Identificadores (Tabla de Simbolos) ---
-Lexema: Aca | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: commit | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: inicial | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: Si | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: hacen | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: pull | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: y | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: lo | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: ven | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: esta | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: todo | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: bien | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: Sebastian | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: reportando | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: el | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: pull | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: completo | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: de | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: nuevo | Linea: 4 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: juanluis | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: reportando | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: el | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: pull | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: completo | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: de | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
-Lexema: nuevo | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: IBonoSueldo | Linea: 1 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: calcularBono | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: salarioBase | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: anosAntiguedad | Linea: 2 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: EmpleadoService | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: IBonoSueldo | Linea: 5 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: porcentajeBase | Linea: 6 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: limiteAnos | Linea: 7 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: calcularBono | Linea: 9 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: salarioBase | Linea: 9 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: anosAntiguedad | Linea: 9 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: bonoTotal | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: salarioBase | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: porcentajeBase | Linea: 10 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: contador | Linea: 11 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: contador | Linea: 13 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: anosAntiguedad | Linea: 13 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: contador | Linea: 13 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: limiteAnos | Linea: 13 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: bonoTotal | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: bonoTotal | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: salarioBase | Linea: 14 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: contador | Linea: 15 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: contador | Linea: 15 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: bonoTotal | Linea: 18 | Token: TOKEN_IDENTIFICADOR | Ambito: local
+Lexema: EmpleadoService | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: service | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: EmpleadoService | Linea: 22 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: bonoFinal | Linea: 23 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: service | Linea: 23 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: calcularBono | Linea: 23 | Token: TOKEN_IDENTIFICADOR | Ambito: global
+Lexema: mensaje | Linea: 24 | Token: TOKEN_IDENTIFICADOR | Ambito: global
 
 --- Conteo de Booleanos ---
 
 --- Conteo de Operadores ---
+Lexema: = | Linea: 6 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 7 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 10 | Token: TOKEN_OPERADOR_=
+Lexema: * | Linea: 10 | Token: TOKEN_OPERADOR_*
+Lexema: = | Linea: 11 | Token: TOKEN_OPERADOR_=
+Lexema: < | Linea: 13 | Token: TOKEN_OPERADOR_<
+Lexema: && | Linea: 13 | Token: TOKEN_OPERADOR_&&
+Lexema: < | Linea: 13 | Token: TOKEN_OPERADOR_<
+Lexema: = | Linea: 14 | Token: TOKEN_OPERADOR_=
+Lexema: + | Linea: 14 | Token: TOKEN_OPERADOR_+
+Lexema: * | Linea: 14 | Token: TOKEN_OPERADOR_*
+Lexema: = | Linea: 15 | Token: TOKEN_OPERADOR_=
+Lexema: + | Linea: 15 | Token: TOKEN_OPERADOR_+
+Lexema: = | Linea: 22 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 23 | Token: TOKEN_OPERADOR_=
+Lexema: = | Linea: 24 | Token: TOKEN_OPERADOR_=
 
 --- Conteo de Palabras Reservadas ---
+Lexema: interface    | Linea: 1   | Token: TOKEN_RESERVADA_interface
+Lexema: double       | Linea: 2   | Token: TOKEN_RESERVADA_double
+Lexema: double       | Linea: 2   | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 2   | Token: TOKEN_RESERVADA_int
+Lexema: class        | Linea: 5   | Token: TOKEN_RESERVADA_class
+Lexema: implements   | Linea: 5   | Token: TOKEN_RESERVADA_implements
+Lexema: double       | Linea: 6   | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 7   | Token: TOKEN_RESERVADA_int
+Lexema: double       | Linea: 9   | Token: TOKEN_RESERVADA_double
+Lexema: double       | Linea: 9   | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 9   | Token: TOKEN_RESERVADA_int
+Lexema: double       | Linea: 10  | Token: TOKEN_RESERVADA_double
+Lexema: int          | Linea: 11  | Token: TOKEN_RESERVADA_int
+Lexema: while        | Linea: 13  | Token: TOKEN_RESERVADA_while
+Lexema: return       | Linea: 18  | Token: TOKEN_RESERVADA_return
+Lexema: new          | Linea: 22  | Token: TOKEN_RESERVADA_new
+Lexema: double       | Linea: 23  | Token: TOKEN_RESERVADA_double
+Lexema: String       | Linea: 24  | Token: TOKEN_RESERVADA_String
 
 --- Conteo de Errores Lexicos ---
